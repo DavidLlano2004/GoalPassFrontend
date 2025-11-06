@@ -1,0 +1,33 @@
+* {
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100,
+    "YTLC" 500;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background: #f1f1f1;
+  height: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  /* Color del thumb */
+}
+
+.gradient-icon {
+  background: linear-gradient(to bottom, #0038A8, #00C853);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-slot="value"] {
+  color: white !important;
+}
+
+[data-slot="selectorIcon"] {
+  stroke: white !important;
+}

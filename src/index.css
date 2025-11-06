@@ -1,0 +1,31 @@
+
+@import "tailwindcss";
+@import "@flaticon/flaticon-uicons/css/all/all.css";
+@import "@flaticon/flaticon-uicons/css/brands/all.css";
+
+@plugin './hero.ts';
+
+/* Note: You may need to change the path to fit your project structure */
+ @source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+ @custom-variant dark (&:is(.dark *));
+
+@theme{
+
+    --color-blue-1-custom:#0038A8;
+
+    --color-green-1-custom:#00C853;
+
+    --color-red-1-custom:#E53935;
+
+    --color-yellow-1-custom:#FFD600;
+
+    --color-black-1-custom:#13161B;
+    --color-black-2-custom:#1E2125;
+    
+    --color-gray-1-custom:#D9D9D9;
+    --color-gray-2-custom:#272C31;
+    --color-gray-3-custom:#929292;
+
+
+
+}
