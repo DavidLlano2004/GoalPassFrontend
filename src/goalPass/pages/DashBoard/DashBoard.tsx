@@ -1,10 +1,17 @@
+import { motion } from "framer-motion";
 import { CardChartsDashboard } from "../../components/molecules/cards/CardChartsDashboard";
 import { CardDashboard } from "../../components/molecules/cards/CardDashboard";
 import { CardNextMatches } from "../../components/molecules/cards/CardNextMatches";
 
 export const DashBoard = () => {
   return (
-    <div className="overflow-y-auto flex-1 p-6">
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -20, opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="overflow-y-auto flex-1 p-6"
+    >
       <div className="flex justify-between items-center gap-3 flex-wrap">
         <CardDashboard
           titleCard="Ventas de hoy"
@@ -45,12 +52,12 @@ export const DashBoard = () => {
           Estado de venta para los próximos partidos
         </p>
         <div className="mt-6 flex flex-col gap-6">
-         <CardNextMatches/>
-         <CardNextMatches textChip="Crítico"/>
-         <CardNextMatches textChip="Atención"/>
-         <CardNextMatches/>
+          <CardNextMatches />
+          <CardNextMatches textChip="Crítico" />
+          <CardNextMatches textChip="Atención" />
+          <CardNextMatches />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -7,6 +7,7 @@ import { ModalCustom } from "../../../shared/components/organims/modals/ModalCus
 import { useDisclosure } from "@heroui/react";
 import { FormCreateMatch } from "../../components/molecules/forms/FormCreateMatch";
 import { useApiTeams } from "../../../apiTeams/useApiTeams";
+import { motion } from "framer-motion";
 
 export const Matches = () => {
   const { getTeamsByApiQuery } = useApiTeams();
@@ -25,10 +26,15 @@ export const Matches = () => {
   const onSubmitCreateMatch = () => {};
 
   console.log(getTeamsByApiQuery.data);
-  
 
   return (
-    <div className="overflow-y-auto flex-1 p-6 flex flex-col">
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -20, opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="overflow-y-auto flex-1 p-6 flex flex-col"
+    >
       <div className="flex items-center justify-between sm:flex-nowrap flex-wrap">
         <div>
           <h1 className="text-[20px] text-white font-bold">
@@ -69,6 +75,6 @@ export const Matches = () => {
       >
         <FormCreateMatch />
       </ModalCustom>
-    </div>
+    </motion.div>
   );
 };

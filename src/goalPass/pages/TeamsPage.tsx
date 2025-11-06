@@ -7,6 +7,7 @@ import { ModalCustom } from "../../shared/components/organims/modals/ModalCustom
 import { useDisclosure } from "@heroui/react";
 import { SelectSimple } from "../../shared/components/molecules/select/SelectSimple";
 import { SkeletonTeams } from "../../shared/components/organims/skeletons/SkeletonTeams";
+import { motion } from "framer-motion";
 
 export const TeamsPage = () => {
   const { getTeamsByApiQuery } = useApiTeams();
@@ -35,7 +36,13 @@ export const TeamsPage = () => {
   console.log(dataSelectTeams);
 
   return (
-    <div className="overflow-y-auto flex-1 p-6 flex flex-col">
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -20, opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="overflow-y-auto flex-1 p-6 flex flex-col"
+    >
       <div className="flex items-center justify-between sm:flex-nowrap flex-wrap">
         <div className="">
           <h1 className="text-[20px] text-white font-bold">
@@ -95,6 +102,6 @@ export const TeamsPage = () => {
           uppercase={false}
         />
       </ModalCustom>
-    </div>
+    </motion.div>
   );
 };

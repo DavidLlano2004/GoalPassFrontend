@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { Images } from "../../../assets/images/ImagesProvider";
 import { ButtonSimple } from "../../../shared/components/molecules/buttons/ButtonSimple";
 import { CardSoccerStands } from "../../components/molecules/cards/CardSoccerStands";
+import { motion } from "framer-motion";
 const { ImageOnceCaldas, ImageNacional } = Images;
 
 export const InfoOneMatch = () => {
@@ -31,7 +32,13 @@ export const InfoOneMatch = () => {
     }
   };
   return (
-    <div className="overflow-y-auto flex-1 p-6 flex flex-col">
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -20, opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="overflow-y-auto flex-1 p-6 flex flex-col"
+    >
       <button
         onClick={() => navigate(-1)}
         className="flex items-center w-[170px] gap-3 cursor-pointer"
@@ -144,9 +151,7 @@ export const InfoOneMatch = () => {
                   <h1 className="text-[20px] font-bold">11,800</h1>
                 </div>
                 <div className="flex flex-col items-center">
-                  <p className="text-[14px] font-light text-white">
-                    Ocupación
-                  </p>
+                  <p className="text-[14px] font-light text-white">Ocupación</p>
                   <h1 className="text-[20px] font-bold">72.5%</h1>
                 </div>
                 <div className="flex flex-col items-center">
@@ -195,6 +200,6 @@ export const InfoOneMatch = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
