@@ -9,7 +9,7 @@ export const GoalPassLayout = () => {
       <Navbar />
       <section className="flex flex-col flex-1 overflow-hidden">
         <Header />
-        <div className="flex-1 bg-black-1-custom flex flex-col text-white max-h-full overflow-hidden">
+        <div className="flex-1 bg-black-1-custom flex flex-col text-white overflow-hidden">
           <Outlet />
         </div>
       </section>

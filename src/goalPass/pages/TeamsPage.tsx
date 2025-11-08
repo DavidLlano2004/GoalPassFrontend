@@ -8,6 +8,7 @@ import { useDisclosure } from "@heroui/react";
 import { SelectSimple } from "../../shared/components/molecules/select/SelectSimple";
 import { SkeletonTeams } from "../../shared/components/organims/skeletons/SkeletonTeams";
 import { motion } from "framer-motion";
+import { ComponentEmpty } from "../../shared/components/molecules/empty/ComponentEmpty";
 
 export const TeamsPage = () => {
   const { getTeamsByApiQuery } = useApiTeams();
@@ -41,7 +42,7 @@ export const TeamsPage = () => {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -20, opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="overflow-y-auto flex-1 p-6 flex flex-col"
+      className="overflow-y-auto flex-1 sm:p-6 p-4 flex flex-col"
     >
       <div className="flex items-center justify-between sm:flex-nowrap flex-wrap">
         <div className="">
@@ -64,26 +65,35 @@ export const TeamsPage = () => {
         </div>
       </div>
 
-      <div className=" bg-black-2-custom w-full min-h-[100px] h-auto rounded-[15px] p-6 flex gap-4 flex-wrap my-4">
-        <div className="w-full">
-          <InputSimple
-            endContent={
-              <div className="flex items-center justify-center h-full">
-                <i className="fi fi-rr-search text-[18px] text-gray-3-custom flex" />
-              </div>
-            }
-            control={control}
-            nameRegister="name"
-            label="Buscar equipo...."
-            validations={{ required: "El nombre es requerido" }}
-          />
+      {[].length > 0 ? (
+        <>
+          <div className=" bg-black-2-custom w-full min-h-[100px] h-auto rounded-[15px] p-6 flex gap-4 flex-wrap mt-6">
+            <div className="w-full">
+              <InputSimple
+                endContent={
+                  <div className="flex items-center justify-center h-full">
+                    <i className="fi fi-rr-search text-[18px] text-gray-3-custom flex" />
+                  </div>
+                }
+                control={control}
+                nameRegister="name"
+                label="Buscar equipo...."
+                validations={{ required: "El nombre es requerido" }}
+              />
+            </div>
+          </div>
+          <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-6 flex-wrap mt-4">
+            {getTeamsByApiQuery.data?.map((dataTeam: any) => (
+              <CardInfoTeam key={dataTeam?.strTeam} dataTeam={dataTeam} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="mt-4  flex-1 grid place-items-center">
+          <ComponentEmpty textComponentEmpty="No hay equipos creados" />
         </div>
-      </div>
-      <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-6 flex-wrap">
-        {getTeamsByApiQuery.data?.map((dataTeam: any) => (
-          <CardInfoTeam key={dataTeam?.strTeam} dataTeam={dataTeam} />
-        ))}
-      </div>
+      )}
+
       <ModalCustom
         // onSubmitModal={handleCreateMatch(onSubmitCreateMatch)}
         isOpen={isOpenModalCreateTeam}

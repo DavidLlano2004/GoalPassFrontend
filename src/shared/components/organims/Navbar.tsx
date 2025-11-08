@@ -1,24 +1,22 @@
-import React, { useState } from "react";
 import { Images } from "../../../assets/images/ImagesProvider";
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation, useMatch } from "react-router";
 import { paths } from "../../../routes/paths";
-import { Tab, Tabs } from "@heroui/tabs";
 
 const { LogoAppSm } = Images;
 
 export const Navbar = () => {
-  const [selectedViews, setSelectedViews] = useState("photos");
-
   const { pathname } = useLocation();
 
-  const optionsNavbar = [
+  const rol = "User";
+
+  const optionsNavbarAdmin = [
     {
       name: "Dashboard",
       path: paths.LayoutGoalPass,
       matchPaths: [paths.LayoutGoalPass],
       iconActive: "fi fi-sr-dashboard-panel",
       iconInactive: "fi fi-tr-dashboard-panel",
-      exact: true, // 👈 añadimos esto para rutas exactas
+      exact: true,
     },
     {
       name: "Partidos",
@@ -64,13 +62,30 @@ export const Navbar = () => {
     },
   ];
 
-  // ✅ Nueva función más precisa
-  const isPathActive = (pathname: string, matchPaths: string[], exact?: boolean) => {
-    if (exact) {
-      return matchPaths.some((m) => pathname === m);
-    }
-    return matchPaths.some((m) => pathname.startsWith(m));
-  };
+  const optionsNavbarUser = [
+    {
+      name: "Partidos",
+      path: paths.LayoutGoalPass,
+      matchPaths: [
+        paths.LayoutGoalPass,
+        paths.ChooseMatchesUser,
+        paths.MatchByIdUser,
+      ],
+      iconActive: "fi fi-sr-calendar-day",
+      iconInactive: "fi fi-tr-calendar-day",
+      exact: true,
+    },
+    {
+      name: "Perfil",
+      path: paths.ProfileUser,
+      matchPaths: [paths.ProfileUser],
+      iconActive: "fi fi-sr-user",
+      iconInactive: "fi fi-rr-user",
+    },
+  ];
+
+  const dataNavbar =
+    rol === "Administrativo" ? optionsNavbarAdmin : optionsNavbarUser;
 
   return (
     <section
@@ -87,9 +102,10 @@ export const Navbar = () => {
       </div>
 
       <div className="w-full mt-8 flex-1 px-6">
-        {optionsNavbar.map(
+        {dataNavbar.map(
           ({ name, path, matchPaths, iconActive, iconInactive, exact }) => {
-            const active = isPathActive(pathname, matchPaths, exact);
+            const matches = matchPaths.map((p) => useMatch(p));
+            const active = matches.some(Boolean);
 
             return (
               <NavLink

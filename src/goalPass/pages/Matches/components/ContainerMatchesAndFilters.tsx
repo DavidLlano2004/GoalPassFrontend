@@ -46,7 +46,7 @@ export const ContainerMatchesAndFilters = ({ control }: Props) => {
           />
         </div>
       </div>
-      <div className="mt-4 flex-1 grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-4 sm:auto-rows-[430px] min-auto-rows-[430px]">
+      <div className="mt-4 flex-1 grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-4 auto-rows-auto">
         <CardInfoMatch />
         <CardInfoMatch textChip="Programado" />
         <CardInfoMatch textChip="Agotado" />

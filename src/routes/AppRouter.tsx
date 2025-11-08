@@ -15,8 +15,13 @@ import { HistoryMacthes } from "../goalPass/pages/HistoryMacthes";
 import { MatchesLayout } from "../goalPass/pages/Matches/MatchesLayout";
 import { Matches } from "../goalPass/pages/Matches/Matches";
 import { InfoOneMatch } from "../goalPass/pages/Matches/Matches[id]";
+import { PrivateRoute } from "../auth/components/privateRoute/PrivateRoute";
+import { MatchesUserLayout } from "../goalPass/pages/matchesUser/MatchesUserLayout";
+import { ChooseMatches } from "../goalPass/pages/matchesUser/ChooseMatches";
+import { MatchByIdUser } from "../goalPass/pages/matchesUser/MatchByIdUser";
+import { TicketMatch } from "../goalPass/pages/matchesUser/TicketMatch";
 export const AppRouter = () => {
-  const rol = "Administrativo";
+  const rol = "Usuario";
   return (
     <BrowserRouter>
       <Routes>
@@ -50,20 +55,105 @@ export const AppRouter = () => {
                 //   allowedRoles={["Empleado"]}
                 //   userRole={rol}
                 // >
-                <UserProfile />
+                <MatchesUserLayout />
                 // </PrivateRoute>
               )
             }
+          >
+            <Route path={paths.ChooseMatchesUser} element={<ChooseMatches />} />
+            <Route path={paths.MatchByIdUser} element={<MatchByIdUser />} />
+            <Route path={paths.TicketMatch} element={<TicketMatch />} />
+          </Route>
+
+          <Route
+            path={paths.ProfileUser}
+            element={
+              <PrivateRoute
+                isAuthenticated={true}
+                allowedRoles={["Usuario"]}
+                userRole={rol}
+              >
+                <UserProfile />
+              </PrivateRoute>
+            }
           />
-          <Route path={paths.MatchesLayout} element={<MatchesLayout />}>
+
+          <Route
+            path={paths.MatchesLayout}
+            element={
+              <PrivateRoute
+                isAuthenticated={true}
+                allowedRoles={["Administrativo"]}
+                userRole={rol}
+              >
+                <MatchesLayout />
+              </PrivateRoute>
+            }
+          >
             <Route path={paths.Matches} element={<Matches />} />
             <Route path={paths.MatchesId} element={<InfoOneMatch />} />
           </Route>
-          <Route path={paths.SimulationPage} element={<SimulationLayout />} />
-          <Route path={paths.ReportsPage} element={<ReportsPage />} />
-          <Route path={paths.UsersPage} element={<UsersPage />} />
-          <Route path={paths.TeamsPage} element={<TeamsPage />} />
-          <Route path={paths.HistoryPage} element={<HistoryMacthes />} />
+
+          <Route
+            path={paths.SimulationPage}
+            element={
+              <PrivateRoute
+                isAuthenticated={true}
+                allowedRoles={["Administrativo"]}
+                userRole={rol}
+              >
+                <SimulationLayout />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={paths.ReportsPage}
+            element={
+              <PrivateRoute
+                isAuthenticated={true}
+                allowedRoles={["Administrativo"]}
+                userRole={rol}
+              >
+                <ReportsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={paths.UsersPage}
+            element={
+              <PrivateRoute
+                isAuthenticated={true}
+                allowedRoles={["Administrativo"]}
+                userRole={rol}
+              >
+                <UsersPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={paths.TeamsPage}
+            element={
+              <PrivateRoute
+                isAuthenticated={true}
+                allowedRoles={["Administrativo"]}
+                userRole={rol}
+              >
+                <TeamsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={paths.HistoryPage}
+            element={
+              <PrivateRoute
+                isAuthenticated={true}
+                allowedRoles={["Administrativo"]}
+                userRole={rol}
+              >
+                <HistoryMacthes />
+              </PrivateRoute>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

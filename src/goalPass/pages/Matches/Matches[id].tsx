@@ -37,7 +37,7 @@ export const InfoOneMatch = () => {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -20, opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="overflow-y-auto flex-1 p-6 flex flex-col"
+      className="overflow-y-auto flex-1 sm:p-6 p-4 flex flex-col"
     >
       <button
         onClick={() => navigate(-1)}
@@ -118,7 +118,7 @@ export const InfoOneMatch = () => {
       <div className=" flex lg:flex-row flex-col gap-4 mt-4 ">
         <div className=" bg-black-2-custom flex-[1.35] h-auto rounded-[15px] p-8 lg:order-1 order-2">
           <div className="flex items-center gap-3">
-            <i className="fi fi-tr-court-sport text-[30px] text-white flex"></i>
+            <i className="fi fi-tr-court-sport text-[20px] text-white flex"></i>
             <h1 className="text-[20px] text-white font-bold">
               Mapa del estadio
             </h1>

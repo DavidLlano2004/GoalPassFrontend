@@ -5,6 +5,7 @@ import ImageBgAuth from "./img_bg_auth.png";
 import ImageOnceCaldas from "./image_once_caldas.png";
 import ImageNacional from "./image_nacional.png";
 
+
 export const Images = {
   LogoXlInit,
   ImageBgAuth,

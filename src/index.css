@@ -1,7 +1,7 @@
 
 @import "tailwindcss";
 @import "@flaticon/flaticon-uicons/css/all/all.css";
-@import "@flaticon/flaticon-uicons/css/brands/all.css";
+
 
 @plugin './hero.ts';
 
@@ -18,6 +18,8 @@
     --color-red-1-custom:#E53935;
 
     --color-yellow-1-custom:#FFD600;
+
+    --color-orange-1-custom:#FA6700;
 
     --color-black-1-custom:#13161B;
     --color-black-2-custom:#1E2125;

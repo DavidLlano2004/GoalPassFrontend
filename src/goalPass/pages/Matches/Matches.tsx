@@ -14,14 +14,15 @@ export const Matches = () => {
 
   const { control: controlSearchTeams } = useForm();
 
-  const { handleSubmit: handleCreateMatch } = useForm();
+  const { handleSubmit: handleCreateMatch, control: controlCreateMatch } =
+    useForm();
   const {
     isOpen: isOpenModalCreateMatch,
     onOpen: onOpenModalCreateMatch,
     onClose: onCloseModalCreateMatch,
   } = useDisclosure();
 
-  const arrayExample = [1];
+  const arrayExample = [];
 
   const onSubmitCreateMatch = () => {};
 
@@ -33,7 +34,7 @@ export const Matches = () => {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -20, opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="overflow-y-auto flex-1 p-6 flex flex-col"
+      className="overflow-y-auto flex-1 sm:p-6 p-4 flex flex-col"
     >
       <div className="flex items-center justify-between sm:flex-nowrap flex-wrap">
         <div>
@@ -73,7 +74,7 @@ export const Matches = () => {
         textButton="Crear"
         titleModal={"Crear partido"}
       >
-        <FormCreateMatch />
+        <FormCreateMatch control={controlCreateMatch} />
       </ModalCustom>
     </motion.div>
   );

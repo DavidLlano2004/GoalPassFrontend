@@ -4,13 +4,11 @@ interface Props {
   textComponentEmpty: string;
 }
 
-export const ComponentEmpty = ({
-  textComponentEmpty,
-}: Props) => {
+export const ComponentEmpty = ({ textComponentEmpty }: Props) => {
   return (
     <div className="flex flex-col items-center gap-2">
-      <i className="fi fi-tr-drawer-empty text-[56px] text-white flex gradient-icon"></i>
-      <p className="text-[18px] font-bold">{textComponentEmpty}</p>
+      <i className="fi fi-tr-drawer-empty text-transparent bg-clip-text bg-linear-to-r from-blue-1-custom to-green-1-custom text-[60px] flex"></i>
+      <p className="text-white lg:text-[20px] text-[18px]  font-bol text-center">{textComponentEmpty}</p>
     </div>
   );
 };
