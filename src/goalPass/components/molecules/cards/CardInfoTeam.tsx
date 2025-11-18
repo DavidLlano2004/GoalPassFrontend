@@ -25,7 +25,7 @@ export const CardInfoTeam = ({ dataTeam }: Props) => {
               <i className="fi fi-rr-edit text-[16px] text-white flex"></i>
             </Button>
           </Tooltip> */}
-          <Tooltip content="Borrar equipo">
+          <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Borrar equipo">
             <Button className="max-w-[30px] w-full h-[30px] rounded-lg bg-red-1-custom">
               <i className="fi fi-rr-trash text-[16px] text-white flex"></i>
             </Button>

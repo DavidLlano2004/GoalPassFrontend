@@ -19,6 +19,7 @@ export const ChooseMatches = () => {
     >
       <div className="flex-1 overflow-y-auto sm:px-6 pb-6 sm:pt-16 pt-6 px-4 bg-black/50">
         <motion.div
+        className=" w-full max-w-[1123px] m-auto"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -20, opacity: 0 }}

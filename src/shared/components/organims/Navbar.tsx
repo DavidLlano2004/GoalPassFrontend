@@ -1,13 +1,12 @@
 import { Images } from "../../../assets/images/ImagesProvider";
-import { NavLink, useLocation, useMatch } from "react-router";
+import { NavLink, useMatch } from "react-router";
 import { paths } from "../../../routes/paths";
+import { useAppSelector } from "../../../redux/hooks/reduxHooks";
 
 const { LogoAppSm } = Images;
 
 export const Navbar = () => {
-  const { pathname } = useLocation();
-
-  const rol = "User";
+  const { rol } = useAppSelector((state: any) => state.auth);
 
   const optionsNavbarAdmin = [
     {
@@ -85,7 +84,7 @@ export const Navbar = () => {
   ];
 
   const dataNavbar =
-    rol === "Administrativo" ? optionsNavbarAdmin : optionsNavbarUser;
+    rol === "administrador" ? optionsNavbarAdmin : optionsNavbarUser;
 
   return (
     <section

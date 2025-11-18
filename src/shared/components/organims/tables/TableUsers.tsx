@@ -79,18 +79,18 @@ export const TableUsers = () => {
         case "actions":
           return (
             <div className="flex items-center gap-3">
-              <Tooltip content="Editar">
+              <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Editar">
                 <Button className="bg-black-2-custom w-10 min-w-0 border border-white grid place-items-center">
                   <i className="fi fi-rr-edit text-base flex text-white"></i>
                 </Button>
               </Tooltip>
-              <Tooltip content="Ver detalles">
+              <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Ver detalles">
                 <Button className="bg-black-2-custom w-10 min-w-0 border border-white place-items-center" >
                   <i className="fi fi-rr-eye text-base flex text-white"></i>
 
                 </Button>
               </Tooltip>
-              <Tooltip content="Eliminar">
+              <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Eliminar">
                 <Button className="bg-red-1-custom w-10 min-w-0 place-items-center" >
                     <i className="fi fi-rr-trash text-base flex text-white"></i>
                 </Button>

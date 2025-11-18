@@ -10,6 +10,8 @@ interface Props {
   isDisabled?: boolean;
   heightButton?: string;
   roundedButton?: string;
+  type?: "button" | "submit" | "reset";
+  isLoading?: boolean;
   actionButton?: () => void;
   startContent?: React.ReactNode;
 }
@@ -25,9 +27,13 @@ export const ButtonSimple = ({
   borderGradient = false,
   roundedButton = "rounded-[15px]",
   isDisabled = false,
+  isLoading = false,
+  type,
 }: Props) => {
   return (
     <Button
+      isLoading={isLoading}
+      type={type}
       isDisabled={isDisabled}
       onPress={actionButton}
       startContent={startContent}

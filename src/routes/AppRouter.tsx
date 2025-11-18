@@ -6,7 +6,7 @@ import { RegisterPage } from "../auth/pages/RegisterPage";
 import { Suspense } from "react";
 import { GoalPassLayout } from "../goalPass/layouts/GoalPassLayout";
 import { DashBoard } from "../goalPass/pages/DashBoard/DashBoard";
-import { UserProfile } from "../goalPass/pages/UserProfile";
+import { UserProfile } from "../goalPass/pages/userProfile/UserProfile";
 import { SimulationLayout } from "../goalPass/pages/simulation/SimulationLayout";
 import { ReportsPage } from "../goalPass/pages/ReportsPage";
 import { UsersPage } from "../goalPass/pages/UsersPage";
@@ -20,8 +20,9 @@ import { MatchesUserLayout } from "../goalPass/pages/matchesUser/MatchesUserLayo
 import { ChooseMatches } from "../goalPass/pages/matchesUser/ChooseMatches";
 import { MatchByIdUser } from "../goalPass/pages/matchesUser/MatchByIdUser";
 import { TicketMatch } from "../goalPass/pages/matchesUser/TicketMatch";
+import { useAppSelector } from "../redux/hooks/reduxHooks";
 export const AppRouter = () => {
-  const rol = "Usuario";
+  const { rol, isLogged } = useAppSelector((state: any) => state.auth);
   return (
     <BrowserRouter>
       <Routes>
@@ -41,22 +42,22 @@ export const AppRouter = () => {
           <Route
             path={paths.LayoutGoalPass}
             element={
-              rol === "Administrativo" ? (
-                // <PrivateRoute
-                //   isAuthenticated={isLogged}
-                //   allowedRoles={["Administrativo"]}
-                //   userRole={rol}
-                // >
-                <DashBoard />
+              rol === "administrador" ? (
+                <PrivateRoute
+                  isAuthenticated={isLogged}
+                  allowedRoles={["administrador"]}
+                  userRole={rol}
+                >
+                  <DashBoard />
+                </PrivateRoute>
               ) : (
-                // </PrivateRoute>
-                // <PrivateRoute
-                //   isAuthenticated={isLogged}
-                //   allowedRoles={["Empleado"]}
-                //   userRole={rol}
-                // >
-                <MatchesUserLayout />
-                // </PrivateRoute>
+                <PrivateRoute
+                  isAuthenticated={isLogged}
+                  allowedRoles={["usuario"]}
+                  userRole={rol}
+                >
+                  <MatchesUserLayout />
+                </PrivateRoute>
               )
             }
           >
@@ -69,8 +70,8 @@ export const AppRouter = () => {
             path={paths.ProfileUser}
             element={
               <PrivateRoute
-                isAuthenticated={true}
-                allowedRoles={["Usuario"]}
+                isAuthenticated={isLogged}
+                allowedRoles={["usuario"]}
                 userRole={rol}
               >
                 <UserProfile />
@@ -82,8 +83,8 @@ export const AppRouter = () => {
             path={paths.MatchesLayout}
             element={
               <PrivateRoute
-                isAuthenticated={true}
-                allowedRoles={["Administrativo"]}
+                isAuthenticated={isLogged}
+                allowedRoles={["administrador"]}
                 userRole={rol}
               >
                 <MatchesLayout />
@@ -98,8 +99,8 @@ export const AppRouter = () => {
             path={paths.SimulationPage}
             element={
               <PrivateRoute
-                isAuthenticated={true}
-                allowedRoles={["Administrativo"]}
+                isAuthenticated={isLogged}
+                allowedRoles={["administrador"]}
                 userRole={rol}
               >
                 <SimulationLayout />
@@ -110,8 +111,8 @@ export const AppRouter = () => {
             path={paths.ReportsPage}
             element={
               <PrivateRoute
-                isAuthenticated={true}
-                allowedRoles={["Administrativo"]}
+                isAuthenticated={isLogged}
+                allowedRoles={["administrador"]}
                 userRole={rol}
               >
                 <ReportsPage />
@@ -122,8 +123,8 @@ export const AppRouter = () => {
             path={paths.UsersPage}
             element={
               <PrivateRoute
-                isAuthenticated={true}
-                allowedRoles={["Administrativo"]}
+                isAuthenticated={isLogged}
+                allowedRoles={["administrador"]}
                 userRole={rol}
               >
                 <UsersPage />
@@ -134,8 +135,8 @@ export const AppRouter = () => {
             path={paths.TeamsPage}
             element={
               <PrivateRoute
-                isAuthenticated={true}
-                allowedRoles={["Administrativo"]}
+                isAuthenticated={isLogged}
+                allowedRoles={["administrador"]}
                 userRole={rol}
               >
                 <TeamsPage />
@@ -146,8 +147,8 @@ export const AppRouter = () => {
             path={paths.HistoryPage}
             element={
               <PrivateRoute
-                isAuthenticated={true}
-                allowedRoles={["Administrativo"]}
+                isAuthenticated={isLogged}
+                allowedRoles={["administrador"]}
                 userRole={rol}
               >
                 <HistoryMacthes />

@@ -12,6 +12,7 @@ interface Props {
   defaultValue?: string | number;
   valueAsNumber?: boolean;
   uppercase?: boolean;
+  isDisabled?: boolean;
   [key: string]: any;
 }
 
@@ -26,6 +27,7 @@ export const InputSimple = ({
   defaultValue = "",
   valueAsNumber = false,
   uppercase = false,
+  isDisabled = false,
   ...rest
 }: Props) => {
   return (
@@ -47,6 +49,7 @@ export const InputSimple = ({
               valueAsNumber ? (val === "" ? null : Number(val)) : val
             );
           }}
+          isDisabled={isDisabled}
           onBlur={field.onBlur}
           ref={field.ref}
           isInvalid={!!fieldState.error}

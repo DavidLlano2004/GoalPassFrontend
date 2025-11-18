@@ -95,13 +95,13 @@ export const CardInfoMatch = ({ textChip = "En venta" }: Props) => {
         </p>
       </div>
       <div className=" mt-8 grid xl:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Tooltip content="Editar">
+        <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Editar">
           <Button className="w-full h-10 rounded-lg border border-white bg-gray-2-custom">
             <i className="fi fi-rr-edit text-[18px] text-white flex"></i>
             <p className=" font-bold text-white lg:hidden flex">Editar</p>
           </Button>
         </Tooltip>
-        <Tooltip content="Ver detalles">
+        <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Ver detalles">
           <Button
             onPress={() => navigateInfoMatch()}
             className="w-full h-10 rounded-lg border border-white bg-gray-2-custom"
@@ -110,7 +110,7 @@ export const CardInfoMatch = ({ textChip = "En venta" }: Props) => {
             <p className=" font-bold text-white lg:hidden flex">Ver detalles</p>
           </Button>
         </Tooltip>
-        <Tooltip content="Cancelar partido">
+        <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Cancelar partido">
           <Button className="w-full h-10 rounded-lg bg-red-1-custom xl:col-span-full col-span-1">
             <i className="fi fi-rr-ban text-[18px] text-white flex"></i>
             <p className=" font-bold text-white lg:hidden flex">

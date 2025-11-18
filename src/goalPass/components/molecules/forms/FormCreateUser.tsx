@@ -61,9 +61,6 @@ export const FormCreateUser = ({
       <div className=" col-span-2">
         <I18nProvider locale="es">
           <DatePicker
-            // errorMessage="Seleccione la fecha y hora"
-            // isInvalid
-
             value={valuePicker}
             onChange={setValuePicker}
             showMonthAndYearPickers

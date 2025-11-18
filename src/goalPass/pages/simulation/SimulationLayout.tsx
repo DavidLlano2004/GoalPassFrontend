@@ -20,26 +20,28 @@ export const SimulationLayout = () => {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -20, opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="overflow-y-auto flex-1 sm:p-6 p-4 flex flex-col"
+      className="overflow-y-auto flex-1 sm:p-6 p-4 flex flex-col "
     >
-      <div className="">
-        <h1 className="text-[20px] text-white font-bold">
-          Simulador de partidos
-        </h1>
-        <p className="text-white font-extralight">
-          Selecciona un partido y simula el resultado
-        </p>
-      </div>
-      {[].length > 0 ? (
-        Object.entries(SIMULATION_PAGES).map(([dataId, dataComponent]) => {
-          const data = currentSection === Number(dataId);
-          return data ? <div key={dataId}>{dataComponent}</div> : null;
-        })
-      ) : (
-        <div className="mt-4  flex-1 grid place-items-center">
-          <ComponentEmpty textComponentEmpty="Aún no hay partidos para simular" />
+      <div className="w-full max-w-[1123px] mx-auto flex-1 flex flex-col">
+        <div className="">
+          <h1 className="text-[20px] text-white font-bold">
+            Simulador de partidos
+          </h1>
+          <p className="text-white font-extralight">
+            Selecciona un partido y simula el resultado
+          </p>
         </div>
-      )}
+        {[1].length > 0 ? (
+          Object.entries(SIMULATION_PAGES).map(([dataId, dataComponent]) => {
+            const data = currentSection === Number(dataId);
+            return data ? <div key={dataId}>{dataComponent}</div> : null;
+          })
+        ) : (
+          <div className="mt-4  flex-1 grid place-items-center">
+            <ComponentEmpty textComponentEmpty="Aún no hay partidos para simular" />
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 };

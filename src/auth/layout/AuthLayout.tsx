@@ -3,21 +3,37 @@ import { LoadingInit } from "../pages/LoadingInit";
 import { Images } from "../../assets/images/ImagesProvider";
 import { ButtonSimple } from "../../shared/components/molecules/buttons/ButtonSimple";
 import { paths } from "../../routes/paths";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 const { ImageBgAuth, LogoAppSm } = Images;
 
 export const AuthLayout = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const loading = false;
 
-  if (loading) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  });
+
+  if (isLoading) {
     return <LoadingInit />;
   }
 
   console.log(pathname);
 
   return (
-    <article className="w-full h-svh overflow-hidden">
+    <motion.article
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="w-full h-svh overflow-hidden"
+    >
       <section className="w-full h-full relative">
         <img className="w-full h-full object-cover" src={ImageBgAuth} alt="" />
         <div className="w-full h-full absolute top-0 bg-black/50 sm:p-6 p-3 flex flex-col overflow-y-auto">
@@ -49,6 +65,6 @@ export const AuthLayout = () => {
           </div>
         </div>
       </section>
-    </article>
+    </motion.article>
   );
 };

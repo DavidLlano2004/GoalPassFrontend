@@ -5,25 +5,52 @@ import { ButtonSimple } from "../../../shared/components/molecules/buttons/Butto
 import { Icons } from "../../../assets/icons/IconsProvider";
 import { Link, useNavigate } from "react-router";
 import { paths } from "../../../routes/paths";
+import { useMutationLogin } from "../../hooks";
 const { IconGoogle } = Icons;
 
 export const FormLogin = () => {
-  const { control } = useForm();
   const navigate = useNavigate();
+  const { loginMutation } = useMutationLogin();
+  const defaultValues = {
+    email: "",
+    password: "",
+  };
+  const { control, handleSubmit, watch, setError } = useForm({ defaultValues });
+  const dataForm = watch();
+
+  const loginFunction = () => {
+    loginMutation.mutate(dataForm, {
+      onSuccess: () => {
+        navigate(paths.LayoutGoalPass);
+      },
+      onError: (error: any) => {
+        if (error.error === "Invalid credentials") {
+          setError("password", {
+            type: "server",
+            message: "Credenciales inválidas",
+          });
+          setError("email", { type: "server", message: "" });
+        }
+      },
+    });
+  };
 
   return (
-    <form className="flex flex-col gap-8">
+    <form
+      onSubmit={handleSubmit(loginFunction)}
+      className="flex flex-col gap-8"
+    >
       <InputSimple
         control={control}
-        nameRegister="name"
+        nameRegister="email"
         label="Correo electrónico"
-        validations={{ required: "El nombre es requerido" }}
+        validations={{ required: "El correo es requerido" }}
       />
       <div className="flex flex-col gap-4 items-start">
         <InputPassword
           control={control}
           nameRegister="password"
-          validations={{ required: "La contraseña es obligatoria" }}
+          validations={{ required: "La contraseña es requerida" }}
         />
         <button className="cursor-pointer">
           <p className="text-white underline font-normal">
@@ -33,9 +60,10 @@ export const FormLogin = () => {
       </div>
       <div className="my-3">
         <ButtonSimple
-          actionButton={() => navigate(paths.LayoutGoalPass)}
+          isLoading={loginMutation.isPending}
           textButton="Ingresar"
           widthButton="w-full"
+          type="submit"
         />
       </div>
       <div className="relative justify-center flex-col flex my-8">
@@ -51,6 +79,7 @@ export const FormLogin = () => {
           widthButton="w-full"
           bgColorButton="bg-white"
           colorTextButton="text-black-1-custom"
+          type="button"
         />
       </div>
       <div className="mt-3">

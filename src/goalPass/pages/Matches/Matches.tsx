@@ -22,7 +22,7 @@ export const Matches = () => {
     onClose: onCloseModalCreateMatch,
   } = useDisclosure();
 
-  const arrayExample = [];
+  const arrayExample = [1];
 
   const onSubmitCreateMatch = () => {};
 
@@ -34,38 +34,40 @@ export const Matches = () => {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -20, opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="overflow-y-auto flex-1 sm:p-6 p-4 flex flex-col"
+      className="overflow-y-auto flex-1 sm:p-6 p-4 flex flex-col "
     >
-      <div className="flex items-center justify-between sm:flex-nowrap flex-wrap">
-        <div>
-          <h1 className="text-[20px] text-white font-bold">
-            Gestión de partidos
-          </h1>
-          <p className="text-white font-extralight">
-            Administra todos tus partidos y boletas.
-          </p>
+      <div className="w-full max-w-[1123px] mx-auto flex-1 flex flex-col">
+        <div className="flex items-center justify-between sm:flex-nowrap flex-wrap">
+          <div>
+            <h1 className="text-[20px] text-white font-bold">
+              Gestión de partidos
+            </h1>
+            <p className="text-white font-extralight">
+              Administra todos tus partidos y boletas.
+            </p>
+          </div>
+          <div className="sm:mt-0 mt-6 sm:w-auto w-full">
+            <ButtonSimple
+              startContent={
+                <i className="fi fi-rr-plus-small text-[20px] text-white flex"></i>
+              }
+              actionButton={() => onOpenModalCreateMatch()}
+              textButton="Crear partido"
+              widthButton="min-w-[190px] w-full"
+            />
+          </div>
         </div>
-        <div className="sm:mt-0 mt-6 sm:w-auto w-full">
-          <ButtonSimple
-            startContent={
-              <i className="fi fi-rr-plus-small text-[20px] text-white flex"></i>
-            }
-            actionButton={() => onOpenModalCreateMatch()}
-            textButton="Crear partido"
-            widthButton="min-w-[190px] w-full"
-          />
+        <div
+          className={`flex-1 flex  flex-col ${
+            arrayExample?.length === 0 && "justify-center items-center"
+          }`}
+        >
+          {arrayExample?.length > 0 ? (
+            <ContainerMatchesAndFilters control={controlSearchTeams} />
+          ) : (
+            <ComponentEmpty textComponentEmpty="Aún no hay partidos" />
+          )}
         </div>
-      </div>
-      <div
-        className={`flex-1 flex flex-col ${
-          arrayExample?.length === 0 && "justify-center items-center"
-        }`}
-      >
-        {arrayExample?.length > 0 ? (
-          <ContainerMatchesAndFilters control={controlSearchTeams} />
-        ) : (
-          <ComponentEmpty textComponentEmpty="Aún no hay partidos" />
-        )}
       </div>
       <ModalCustom
         onSubmitModal={handleCreateMatch(onSubmitCreateMatch)}

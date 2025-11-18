@@ -107,7 +107,7 @@ export const TicketMatch = () => {
                     </div>
                     <div className="h-0.5 bg-linear-to-l from-green-1-custom to-blue-1-custom"></div>
                     <div className="flex items-center justify-between">
-                      <p className="font-light text-[18px]">Precio unitario:</p>
+                      <p className="font-light text-[18px]">Total pagado:</p>
                       <p className="text-[18px] font-semibold">$45,000</p>
                     </div>
                   </div>
