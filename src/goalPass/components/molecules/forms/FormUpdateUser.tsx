@@ -1,11 +1,10 @@
 import { InputSimple } from "../../../../shared/components/molecules/input/InputSimple";
 import { SelectSimple } from "../../../../shared/components/molecules/select/SelectSimple";
-import { InputPassword } from "../../../../shared/components/molecules/input/InputPassword";
 import ControlledDatePicker from "../../../../shared/components/molecules/input/InputDate";
-import { ValidatePassword } from "../../../../shared/components/molecules/validatePassword/ValidatePassword";
 import type { Control, UseFormRegister } from "react-hook-form";
+import { useEffect } from "react";
 
-export interface CreateUserFormData {
+export interface UpdateUserFormData {
   name: string;
   last_name: string;
   identification_type: "CC" | "TI";
@@ -17,35 +16,50 @@ export interface CreateUserFormData {
   confirm_password: string;
 }
 
-interface FormCreateUserProps {
-  control: Control<CreateUserFormData>;
-  register: UseFormRegister<CreateUserFormData>;
-  password: string;
+interface FormUpdateUserProps {
+  control: Control<UpdateUserFormData>;
+  register: UseFormRegister<UpdateUserFormData>;
+  userInfoState: any;
+  reset: any;
 }
-export const FormCreateUser = ({
+export const FormUpdateUser = ({
   control,
   register,
-  password,
-}: FormCreateUserProps) => {
+  userInfoState,
+  reset,
+}: FormUpdateUserProps) => {
+  useEffect(() => {
+    if (userInfoState != null) {
+      reset({
+        name: userInfoState.name || "",
+        last_name: userInfoState.last_name || "",
+        identification_type: userInfoState.identification_type || "",
+        identification: userInfoState.identification || "",
+        email: userInfoState.email || "",
+        rol: userInfoState.rol || "",
+      });
+    }
+  }, [userInfoState, reset]);
   return (
     <div className="grid grid-cols-2 gap-4">
       <InputSimple
+        defaultValue={`${userInfoState?.name}`}
         control={control}
         nameRegister="name"
         label="Nombres"
-        validations={{ required: "El nombre es requerido" }}
       />
       <InputSimple
         control={control}
         nameRegister="last_name"
         label="Apellidos"
-        validations={{ required: "El nombre es requerido" }}
+        defaultValue={`${userInfoState?.last_name}`}
       />
       <div className=" col-span-2">
         <InputSimple
           startContent={
             <div className="flex items-center">
               <select
+                defaultValue={`${userInfoState?.identification_type}`}
                 className="outline-solid outline-transparent border-0 bg-transparent text-default-400 text-small"
                 id="identification_type"
                 {...register("identification_type")}
@@ -58,7 +72,7 @@ export const FormCreateUser = ({
           control={control}
           nameRegister="identification"
           label="Identificación"
-          validations={{ required: "El nombre es requerido" }}
+          defaultValue={`${userInfoState?.identification}`}
         />
       </div>
       <div className=" col-span-2">
@@ -70,7 +84,6 @@ export const FormCreateUser = ({
             { label: "Administrador", key: "administrador" },
             { label: "Usuario", key: "usuario" },
           ]}
-          validations={{ required: "Seleccione un rol" }}
           labelOption={""}
           uppercase={false}
         />
@@ -80,7 +93,7 @@ export const FormCreateUser = ({
           control={control}
           name="birthday"
           label="Fecha de cumpleaños"
-          isRequired
+          // defaultValue={userInfoState?.birthday}
         />
       </div>
       <div className=" col-span-2">
@@ -88,25 +101,9 @@ export const FormCreateUser = ({
           control={control}
           nameRegister="email"
           label="Correo electrónico"
-          validations={{ required: "El nombre es requerido" }}
           type="email"
+          defaultValue={userInfoState?.email}
         />
-      </div>
-      <div className="col-span-2">
-        <InputPassword
-          control={control}
-          nameRegister="password"
-          validations={{ required: "La contraseña es obligatoria" }}
-        />
-      </div>
-      <div className="col-span-2">
-        <InputPassword
-          label="Confirmar contraseña"
-          control={control}
-          nameRegister="confirm_password"
-          validations={{ required: "La contraseña es obligatoria" }}
-        />
-        <ValidatePassword password={password} />
       </div>
     </div>
   );

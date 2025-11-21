@@ -87,7 +87,7 @@ export const MenuSm = ({ isOpen, onOpenChange }: Props) => {
   ];
 
   const dataNavbar =
-    rol === "Administrativo" ? optionsNavbarAdmin : optionsNavbarUser;
+    rol === "administrador" ? optionsNavbarAdmin : optionsNavbarUser;
   return (
     <Drawer isOpen={isOpen} placement={"left"} onOpenChange={onOpenChange}>
       <DrawerContent className="bg-black-2-custom w-[70%]">

@@ -20,7 +20,8 @@ export const FormLogin = () => {
 
   const loginFunction = () => {
     loginMutation.mutate(dataForm, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        localStorage.setItem("token", data?.token);
         navigate(paths.LayoutGoalPass);
       },
       onError: (error: any) => {

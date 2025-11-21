@@ -65,11 +65,6 @@ export const FormRegister = () => {
     });
   };
 
-  console.log("====================================");
-  console.log(password);
-  console.log(confirm_password);
-  console.log("====================================");
-
   return (
     <form
       onSubmit={handleSubmit(registerFunction)}

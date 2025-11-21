@@ -14,6 +14,8 @@ interface Props {
 
 export const registerAction = async (dataForm: Props) => {
   await sleep(2000);
+  console.log(dataForm);
+  
 
   try {
     const { data } = await apiGoalPass.post<ResponseAuth>("/auth/register/" , dataForm);

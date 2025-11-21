@@ -1,9 +1,9 @@
 import { Skeleton } from "@heroui/skeleton";
 import React from "react";
 
-export const SkeletonTeams = () => {
+export const SkeletonUsers = () => {
   return (
-    <div className="overflow-y-auto flex-1 p-6 flex flex-col">
+    <div className="overflow-y-auto flex-1 p-6 flex flex-col w-full max-w-[1123px] mx-auto">
       <div className="flex items-center justify-between sm:flex-nowrap flex-wrap mb-4">
         <div className="gap-2 flex flex-col">
           <Skeleton className="rounded-xl w-[234px] h-[30px] bg-[#8C8C90]" />
@@ -13,13 +13,11 @@ export const SkeletonTeams = () => {
           <Skeleton className="rounded-[15px] min-w-[190px] w-full h-[50px] bg-[#8C8C90]" />
         </div>
       </div>
-      <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-6 flex-wrap">
-        {[1, 2, 3].map((item: any) => (
+     
+      <div className="">
           <Skeleton
-            key={item}
-            className="rounded-[15px] flex-1 h-[293px] bg-[#8C8C90]"
+            className="rounded-[15px] flex-1 h-[380px] bg-[#8C8C90]"
           />
-        ))}
       </div>
     </div>
   );

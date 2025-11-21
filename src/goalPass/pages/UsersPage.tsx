@@ -1,24 +1,195 @@
 import { motion } from "framer-motion";
 import { ButtonSimple } from "../../shared/components/molecules/buttons/ButtonSimple";
-import { InputSimple } from "../../shared/components/molecules/input/InputSimple";
-import { SelectSimple } from "../../shared/components/molecules/select/SelectSimple";
 import { useForm } from "react-hook-form";
 import { TableUsers } from "../../shared/components/organims/tables/TableUsers";
 import { ComponentEmpty } from "../../shared/components/molecules/empty/ComponentEmpty";
 import { ModalCustom } from "../../shared/components/organims/modals/ModalCustom";
-import { useDisclosure } from "@heroui/react";
-import { FormCreateUser } from "../components/molecules/forms/FormCreateUser";
-motion;
+import { addToast, useDisclosure } from "@heroui/react";
+import {
+  FormCreateUser,
+  type CreateUserFormData,
+} from "../components/molecules/forms/FormCreateUser";
+import { useQueryUsers } from "../hooks/useQueryUsers.hook";
+import { SkeletonUsers } from "../../shared/components/organims/skeletons/SkeletonUsers";
+import { useMutationRegister } from "../../auth/hooks/useMutationRegister.hooks";
+import { useMutationUsers } from "../hooks/useMutationUsers.hook";
+import { useState } from "react";
+import { FormUpdateUser } from "../components/molecules/forms/FormUpdateUser";
 
 export const UsersPage = () => {
-  const { control } = useForm();
-  const { control: controlCreateUser } = useForm();
+  const { getUsersQuery } = useQueryUsers();
+  const { registerMutation } = useMutationRegister();
+  const { deleteUserMutation, updateUserMutation } = useMutationUsers();
+
+  const [userInfoState, setUserInfoState] = useState("");
+
+  const {
+    setError: setErrorCreateUser,
+    reset: resetCreateUser,
+    control: controlCreateUser,
+    register: registerCreateUser,
+    watch: watchCreateUser,
+    handleSubmit: handleSubmitCreateUser,
+    clearErrors: clearErrorsCreateUser,
+  } = useForm<CreateUserFormData>({
+    defaultValues: {
+      name: "",
+      last_name: "",
+      identification_type: "CC",
+      identification: "",
+      rol: "",
+      birthday: "",
+      email: "",
+      password: "",
+    },
+  });
+  const {
+    password: passwordCreateUser,
+    confirm_password: confirm_passwordCreateUser,
+  } = watchCreateUser();
+  const dataFormCreateUser = watchCreateUser();
+
+  const {
+    reset: resetUpdateUser,
+    setError: setErrorUpdateUser,
+    control: controlUpdateUser,
+    register: registerUpdateUser,
+    watch: watchUpdateUser,
+    handleSubmit: handleSubmitUpdateUser,
+  } = useForm<CreateUserFormData>();
+
+  const dataFormUpdateUser = watchUpdateUser();
 
   const {
     isOpen: isOpenModalCreateUser,
     onOpen: onOpenModalCreateUser,
     onClose: onCloseModalCreateUser,
   } = useDisclosure();
+
+  const {
+    isOpen: isOpenModalUpdateUser,
+    onOpen: onOpenModalUpdateUser,
+    onClose: onCloseModalUpdateUser,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenModalDeleteUser,
+    onOpen: onOpenModalDeleteUser,
+    onClose: onCloseModalDeleteUser,
+  } = useDisclosure();
+
+  if (getUsersQuery.isLoading) {
+    return <SkeletonUsers />;
+  }
+
+  const closeModalCreateUser = () => {
+    onCloseModalCreateUser();
+    resetCreateUser();
+    clearErrorsCreateUser();
+  };
+
+  const chooseUserByDelete = (user: string) => {
+    onOpenModalDeleteUser();
+    setUserInfoState(user);
+  };
+
+  const closeModalDeleteUser = () => {
+    onCloseModalDeleteUser();
+    setUserInfoState("");
+  };
+
+  const chooseUserByUpdate = (user: string) => {
+    onOpenModalUpdateUser();
+    setUserInfoState(user);
+  };
+
+  const closeModalUpdateUser = () => {
+    resetUpdateUser();
+    onCloseModalUpdateUser();
+    setUserInfoState("");
+  };
+
+  const createUserFunction = () => {
+    if (passwordCreateUser != confirm_passwordCreateUser) {
+      setErrorCreateUser("confirm_password", {
+        type: "server",
+        message: "Las contraseñas no coinciden",
+      });
+      return false;
+    }
+    registerMutation.mutate(dataFormCreateUser, {
+      onSuccess: () => {
+        closeModalCreateUser();
+        addToast({
+          title: "Registro",
+          description: "Usuario creado con éxito",
+          color: "success",
+        });
+      },
+      onError: (error: any) => {
+        if (error.error === "Email already registered") {
+          setErrorCreateUser("email", {
+            type: "server",
+            message: "Este correo ya está registrado",
+          });
+        }
+        if (error.error === "Identification already registered") {
+          setErrorCreateUser("identification", {
+            type: "server",
+            message: "La identificación ya está en uso",
+          });
+        }
+      },
+    });
+  };
+
+  const deleteUserFunction = () => {
+    deleteUserMutation.mutate(userInfoState?.id, {
+      onSuccess: () => {
+        closeModalDeleteUser();
+        addToast({
+          title: "Usuario",
+          description: "Usuario eliminado con éxito",
+          color: "success",
+        });
+      },
+    });
+  };
+
+  const updateUserFunction = () => {
+    updateUserMutation.mutate(
+      { dataForm: dataFormUpdateUser, userId: userInfoState?.id },
+      {
+        onSuccess: () => {
+          closeModalUpdateUser();
+          addToast({
+            title: "Editar",
+            description: "Usuario editado con éxito",
+            color: "success",
+          });
+        },
+        onError: (error: any) => {
+          if (error.error === "Email already registered") {
+            setErrorUpdateUser("email", {
+              type: "server",
+              message: "Este correo ya está registrado",
+            });
+          }
+          if (error.error === "Identification already registered") {
+            setErrorUpdateUser("identification", {
+              type: "server",
+              message: "La identificación ya está en uso",
+            });
+          }
+        },
+      }
+    );
+  };
+
+  console.log("====================================");
+  console.log(userInfoState);
+  console.log("====================================");
+
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}
@@ -48,38 +219,14 @@ export const UsersPage = () => {
             />
           </div>
         </div>
-        {[1].length > 0 ? (
-          <>
-            <div className=" bg-black-2-custom w-full h-auto rounded-[15px] justify-between p-6 flex lg:flex-row flex-col gap-4 flex-wrap mt-6">
-              <div className="flex-1">
-                <InputSimple
-                  endContent={
-                    <div className="flex items-center justify-center h-full">
-                      <i className="fi fi-rr-search text-[18px] text-gray-3-custom flex" />
-                    </div>
-                  }
-                  control={control}
-                  nameRegister="name"
-                  label="Buscar usuario...."
-                  validations={{ required: "El nombre es requerido" }}
-                />
-              </div>
-              <div className="lg:w-[214px] w-full">
-                <SelectSimple
-                  control={control}
-                  nameRegister="rol"
-                  label="Tipo de usuario"
-                  options={[]}
-                  validations={{ required: "Seleccione un rol" }}
-                  labelOption={""}
-                  uppercase={false}
-                />
-              </div>
-            </div>
-            <div className="mt-4">
-              <TableUsers />
-            </div>
-          </>
+        {(getUsersQuery.data?.users ?? []).length > 0 ? (
+          <div className="mt-4">
+            <TableUsers
+              chooseUserByUpdate={chooseUserByUpdate}
+              chooseUserByDelete={chooseUserByDelete}
+              dataTable={getUsersQuery.data?.users}
+            />
+          </div>
         ) : (
           <div className="mt-4  flex-1 grid place-items-center">
             <ComponentEmpty textComponentEmpty="No hay usuarios creados" />
@@ -88,13 +235,50 @@ export const UsersPage = () => {
       </div>
 
       <ModalCustom
-        // onSubmitModal={handleCreateMatch(onSubmitCreateMatch)}
+        onSubmitModal={handleSubmitCreateUser(createUserFunction)}
         isOpen={isOpenModalCreateUser}
-        onClose={onCloseModalCreateUser}
+        onClose={closeModalCreateUser}
         textButton="Crear"
         titleModal={"Crear usuario"}
+        isLoadingButton={registerMutation.isPending}
       >
-        <FormCreateUser control={controlCreateUser} />
+        <FormCreateUser
+          password={passwordCreateUser}
+          register={registerCreateUser}
+          control={controlCreateUser}
+        />
+      </ModalCustom>
+      <ModalCustom
+        onSubmitModal={handleSubmitUpdateUser(updateUserFunction)}
+        isOpen={isOpenModalUpdateUser}
+        onClose={closeModalUpdateUser}
+        textButton="Editar"
+        titleModal={"Editar usuario"}
+        isLoadingButton={updateUserMutation.isPending}
+      >
+        <FormUpdateUser
+          userInfoState={userInfoState}
+          register={registerUpdateUser}
+          control={controlUpdateUser}
+          reset={resetUpdateUser}
+        />
+      </ModalCustom>
+      <ModalCustom
+        onSubmitModal={deleteUserFunction}
+        isOpen={isOpenModalDeleteUser}
+        onClose={closeModalDeleteUser}
+        textButton="Eliminar"
+        titleModal={"Eliminar usuario"}
+        isLoadingButton={deleteUserMutation.isPending}
+      >
+        <div className="my-4">
+          <h1 className="text-center text-white text-[20px] font-bold">
+            ¿Quieres eliminar este usuario?
+          </h1>
+          <p className="text-center text-white font-extralight mt-2 w-[80%] mx-auto">
+            No podrás recuperar la información de este usuario
+          </p>
+        </div>
       </ModalCustom>
     </motion.div>
   );

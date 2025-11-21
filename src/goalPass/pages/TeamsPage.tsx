@@ -9,9 +9,34 @@ import { SelectSimple } from "../../shared/components/molecules/select/SelectSim
 import { SkeletonTeams } from "../../shared/components/organims/skeletons/SkeletonTeams";
 import { motion } from "framer-motion";
 import { ComponentEmpty } from "../../shared/components/molecules/empty/ComponentEmpty";
+import { useMutationTeams } from "../hooks";
+import { useQueryTeams } from "../hooks/useQueryTeams.hook";
+import { useMemo, useState } from "react";
 
 export const TeamsPage = () => {
   const { getTeamsByApiQuery } = useApiTeams();
+  const { createTeamMutation, deleteTeamMutation } = useMutationTeams();
+  const { getTeamsQuery } = useQueryTeams();
+
+  const dataSelectTeams = useMemo(() => {
+    // Obtener los nombres de los equipos que ya existen
+    const existingTeamNames = new Set(
+      getTeamsQuery?.data?.teams?.map((team: any) => team?.name) ?? []
+    );
+
+    // Filtrar solo los equipos que NO están en existingTeamNames
+    return (
+      getTeamsByApiQuery.data
+        ?.filter((team: any) => !existingTeamNames.has(team?.strTeam))
+        .map((team: any) => ({
+          key: team?.strTeam,
+          label: team?.strTeam,
+          iconSelect: team?.strBadge,
+        })) ?? []
+    );
+  }, [getTeamsByApiQuery.data, getTeamsQuery?.data?.teams]);
+
+  const [loadingSpaces, setLoadingSpaces] = useState(new Set());
 
   const {
     isOpen: isOpenModalCreateTeam,
@@ -19,22 +44,65 @@ export const TeamsPage = () => {
     onClose: onCloseModalCreateTeam,
   } = useDisclosure();
 
-  const { control } = useForm();
+  const {
+    control: controlCreateTeam,
+    watch: watchCreateTeam,
+    handleSubmit: handleSubmitCreateTeam,
+    clearErrors: clearErrorsCreateTeam,
+    reset: resetCreateTeam,
+  } = useForm();
 
-  if (getTeamsByApiQuery.isLoading) {
+  const teamSelected = watchCreateTeam("team");
+
+  const loadingTeams = getTeamsByApiQuery.isLoading || getTeamsQuery.isLoading;
+
+  if (loadingTeams) {
     return <SkeletonTeams />;
   }
 
-  console.log(getTeamsByApiQuery.data);
+  const team = getTeamsByApiQuery.data?.find(
+    (team: any) => team.strTeam === teamSelected
+  );
 
-  const dataSelectTeams =
-    getTeamsByApiQuery.data?.map((team: any) => ({
-      key: team?.strTeam,
-      label: team?.strTeam,
-      iconSelect: team?.strBadge,
-    })) ?? [];
+  const teamInfo = team
+    ? {
+        name: team.strTeam,
+        stadium: team.strStadium,
+        city: team.strLocation,
+        foundation: team.intFormedYear,
+        image_url: team.strBadge,
+      }
+    : null;
 
-  console.log(dataSelectTeams);
+  const closeModalCreateTeamFunction = () => {
+    onCloseModalCreateTeam();
+    clearErrorsCreateTeam();
+    resetCreateTeam();
+  };
+
+  const createTeamFunction = () => {
+    if (teamInfo) {
+      createTeamMutation.mutate(teamInfo, {
+        onSuccess: () => {
+          closeModalCreateTeamFunction();
+        },
+      });
+    }
+  };
+
+  const deleteTeamFunction = (teamId: string) => {
+    setLoadingSpaces((prev) => new Set(prev).add(teamId));
+
+    deleteTeamMutation.mutate(teamId, {
+      onSettled: () => {
+        setLoadingSpaces((prev) => {
+          const updated = new Set(prev);
+          updated.delete(teamId);
+          return updated;
+        });
+      },
+    });
+  };
 
   return (
     <motion.div
@@ -66,27 +134,20 @@ export const TeamsPage = () => {
           </div>
         </div>
 
-        {[1].length > 0 ? (
+        {(getTeamsQuery.data?.teams ?? []).length > 0 ? (
           <>
-            <div className=" bg-black-2-custom w-full min-h-[100px] h-auto rounded-[15px] p-6 flex gap-4 flex-wrap mt-6">
-              <div className="w-full">
-                <InputSimple
-                  endContent={
-                    <div className="flex items-center justify-center h-full">
-                      <i className="fi fi-rr-search text-[18px] text-gray-3-custom flex" />
-                    </div>
-                  }
-                  control={control}
-                  nameRegister="name"
-                  label="Buscar equipo...."
-                  validations={{ required: "El nombre es requerido" }}
-                />
-              </div>
-            </div>
             <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-6 flex-wrap mt-4">
-              {getTeamsByApiQuery.data?.map((dataTeam: any) => (
-                <CardInfoTeam key={dataTeam?.strTeam} dataTeam={dataTeam} />
-              ))}
+              {getTeamsQuery.data?.teams?.map((dataTeam: any) => {
+                const isLoading = loadingSpaces.has(dataTeam?.id);
+                return (
+                  <CardInfoTeam
+                    key={dataTeam?.id}
+                    dataTeam={dataTeam}
+                    actionDelete={() => deleteTeamFunction(dataTeam?.id)}
+                    isLoadingButton={isLoading}
+                  />
+                );
+              })}
             </div>
           </>
         ) : (
@@ -97,19 +158,20 @@ export const TeamsPage = () => {
       </div>
 
       <ModalCustom
-        // onSubmitModal={handleCreateMatch(onSubmitCreateMatch)}
+        onSubmitModal={handleSubmitCreateTeam(createTeamFunction)}
         isOpen={isOpenModalCreateTeam}
-        onClose={onCloseModalCreateTeam}
+        onClose={closeModalCreateTeamFunction}
         textButton="Crear"
         titleModal={"Crear equipo"}
+        isLoadingButton={createTeamMutation.isPending}
       >
         <SelectSimple
           iconItem
-          control={control}
-          nameRegister="rol"
+          control={controlCreateTeam}
+          nameRegister="team"
           label="Equipos disponibles"
           options={dataSelectTeams}
-          validations={{ required: "Seleccione un rol" }}
+          validations={{ required: "Seleccione un equipo" }}
           labelOption={""}
           uppercase={false}
         />

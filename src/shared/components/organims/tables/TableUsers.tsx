@@ -12,23 +12,6 @@ import {
   Tooltip,
 } from "@heroui/react";
 
-export const users = [
-  {
-    key: "1",
-    name: "User Admin",
-    email: "admin@gmail.com",
-    identification: "1107974183",
-    rol: "Administrador",
-  },
-  {
-    key: "2",
-    name: "Julian Rodriguex",
-    email: "julian@gmail.com",
-    identification: "1107974183",
-    rol: "Usuario",
-  }
-];
-
 export const columns = [
   { name: "Usuario", uid: "name" },
   { name: "Correo", uid: "email" },
@@ -37,18 +20,22 @@ export const columns = [
   { name: "Acciones", uid: "actions" },
 ];
 
-export const TableUsers = () => {
+export const TableUsers = ({
+  dataTable,
+  chooseUserByDelete,
+  chooseUserByUpdate,
+}: any) => {
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = 5;
 
-  const pages = Math.ceil(users.length / rowsPerPage);
+  const pages = Math.ceil(dataTable.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return users.slice(start, end);
-  }, [page, users]);
+    return dataTable.slice(start, end);
+  }, [page, dataTable]);
 
   const renderCell = React.useCallback(
     (user: { [x: string]: any }, columnKey: string | number) => {
@@ -68,7 +55,7 @@ export const TableUsers = () => {
           return (
             <div
               className={`h-[30px] w-[100px] rounded-[20px] border grid place-items-center ${
-                cellValue === "Administrador"
+                cellValue === "administrador"
                   ? "border-yellow-1-custom bg-yellow-1-custom/30 text-yellow-1-custom"
                   : "border-blue-1-custom bg-blue-1-custom/30 text-[#0055ff]"
               }`}
@@ -79,20 +66,34 @@ export const TableUsers = () => {
         case "actions":
           return (
             <div className="flex items-center gap-3">
-              <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Editar">
-                <Button className="bg-black-2-custom w-10 min-w-0 border border-white grid place-items-center">
+              <Tooltip
+                classNames={{ content: "bg-red-800 text-white" }}
+                content="Editar"
+              >
+                <Button
+                  onPress={() => chooseUserByUpdate(user)}
+                  className="bg-black-2-custom w-10 min-w-0 border border-white grid place-items-center"
+                >
                   <i className="fi fi-rr-edit text-base flex text-white"></i>
                 </Button>
               </Tooltip>
-              <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Ver detalles">
-                <Button className="bg-black-2-custom w-10 min-w-0 border border-white place-items-center" >
+              <Tooltip
+                classNames={{ content: "bg-red-800 text-white" }}
+                content="Ver detalles"
+              >
+                <Button className="bg-black-2-custom w-10 min-w-0 border border-white place-items-center">
                   <i className="fi fi-rr-eye text-base flex text-white"></i>
-
                 </Button>
               </Tooltip>
-              <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Eliminar">
-                <Button className="bg-red-1-custom w-10 min-w-0 place-items-center" >
-                    <i className="fi fi-rr-trash text-base flex text-white"></i>
+              <Tooltip
+                classNames={{ content: "bg-red-800 text-white" }}
+                content="Eliminar"
+              >
+                <Button
+                  onPress={() => chooseUserByDelete(user)}
+                  className="bg-red-1-custom w-10 min-w-0 place-items-center"
+                >
+                  <i className="fi fi-rr-trash text-base flex text-white"></i>
                 </Button>
               </Tooltip>
             </div>
@@ -142,7 +143,7 @@ export const TableUsers = () => {
       </TableHeader>
       <TableBody items={items}>
         {(item) => (
-          <TableRow key={item.key}>
+          <TableRow key={item?.id}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
