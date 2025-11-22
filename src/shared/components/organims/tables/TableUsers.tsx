@@ -24,6 +24,7 @@ export const TableUsers = ({
   dataTable,
   chooseUserByDelete,
   chooseUserByUpdate,
+  chooseUserInfo,
 }: any) => {
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 5;
@@ -81,7 +82,10 @@ export const TableUsers = ({
                 classNames={{ content: "bg-red-800 text-white" }}
                 content="Ver detalles"
               >
-                <Button className="bg-black-2-custom w-10 min-w-0 border border-white place-items-center">
+                <Button
+                  onPress={() => chooseUserInfo(user)}
+                  className="bg-black-2-custom w-10 min-w-0 border border-white place-items-center"
+                >
                   <i className="fi fi-rr-eye text-base flex text-white"></i>
                 </Button>
               </Tooltip>

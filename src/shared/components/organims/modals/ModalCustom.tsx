@@ -25,7 +25,7 @@ export const ModalCustom = ({
   isDeleteModal = false,
   isLoadingButton = false,
   onSubmitModal,
-  textButton = "Aceptar",
+  textButton,
   children,
   titleModal,
 }: ModalCustomProps) => {
@@ -88,39 +88,41 @@ export const ModalCustom = ({
               )}
 
               <ModalBody>{children}</ModalBody>
-              <ModalFooter>
-                <Button
-                  onPress={onClose}
-                  className={` h-[45px] ${
-                    isDeleteModal
-                      ? "bg-black-custom text-white"
-                      : "bg-gray-2-custom text-white "
-                  }  rounded-3xl text-base px-10`}
-                >
-                  <span
-                    className="absolute inset-0 rounded-3xl p-0.5"
-                    style={{
-                      background: "linear-gradient(to top, #00C853, #0038A8)",
-                      WebkitMask:
-                        "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                      WebkitMaskComposite: "xor",
-                      maskComposite: "exclude",
-                    }}
-                  ></span>
-                  Cancelar
-                </Button>
-                <Button
-                  isLoading={isLoadingButton}
-                  onPress={onSubmitModal}
-                  className={` h-12 ${
-                    !isDeleteModal
-                      ? "bg-linear-to-r from-blue-1-custom to-green-1-custom text-white"
-                      : "bg-transparent text-black-custom  border border-black-custom "
-                  }  rounded-3xl text-base px-10`}
-                >
-                  {textButton}
-                </Button>
-              </ModalFooter>
+              {textButton && (
+                <ModalFooter>
+                  <Button
+                    onPress={onClose}
+                    className={` h-[45px] ${
+                      isDeleteModal
+                        ? "bg-black-custom text-white"
+                        : "bg-gray-2-custom text-white "
+                    }  rounded-3xl text-base px-10`}
+                  >
+                    <span
+                      className="absolute inset-0 rounded-3xl p-0.5"
+                      style={{
+                        background: "linear-gradient(to top, #00C853, #0038A8)",
+                        WebkitMask:
+                          "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                        WebkitMaskComposite: "xor",
+                        maskComposite: "exclude",
+                      }}
+                    ></span>
+                    Cancelar
+                  </Button>
+                  <Button
+                    isLoading={isLoadingButton}
+                    onPress={onSubmitModal}
+                    className={` h-12 ${
+                      !isDeleteModal
+                        ? "bg-linear-to-r from-blue-1-custom to-green-1-custom text-white"
+                        : "bg-transparent text-black-custom  border border-black-custom "
+                    }  rounded-3xl text-base px-10`}
+                  >
+                    {textButton}
+                  </Button>
+                </ModalFooter>
+              )}
             </>
           )}
         </ModalContent>

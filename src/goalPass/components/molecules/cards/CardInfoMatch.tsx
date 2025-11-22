@@ -2,57 +2,87 @@ import { Button, Tooltip } from "@heroui/react";
 import { Images } from "../../../../assets/images/ImagesProvider";
 import { generatePath, useNavigate } from "react-router";
 import { paths } from "../../../../routes/paths";
-const { ImageOnceCaldas, ImageNacional } = Images;
 
 interface Props {
   textChip?: string;
+  match: any;
 }
 
-export const CardInfoMatch = ({ textChip = "En venta" }: Props) => {
+export const CardInfoMatch = ({ textChip = "En venta", match }: Props) => {
   const navigate = useNavigate();
+
+  const formattedBirthday = match?.match_date
+    ? new Date(match?.match_date).toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : null;
+
+  const formatTo12Hour = (time: string) => {
+    if (!time) return "";
+
+    const [hourStr, minute] = time.split(":");
+    let hour = parseInt(hourStr, 10);
+
+    const ampm = hour >= 12 ? "PM" : "AM";
+
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
+
+    const hourFormatted = String(hour).padStart(2, "0");
+
+    return `${hourFormatted}:${minute} ${ampm}`;
+  };
+
   const navigateInfoMatch = () => {
-    const id = 1;
+    const id = match?.id;
     const path = generatePath(paths.MatchesId, { id });
     navigate(path);
   };
 
   const colorChip = () => {
     switch (textChip) {
-      case "En venta":
+      case "en_venta":
         return {
           containerChip:
             "bg-green-1-custom/30 border-green-1-custom shadow-green-1-custom",
-          textChip: "text-green-1-custom",
+          textChipColor: "text-green-1-custom",
+          textChipFunction: "En venta",
         };
-      case "Programado":
+      case "programado":
         return {
           containerChip:
             "bg-blue-1-custom/30 border-blue-1-custom shadow-blue-1-custom",
-          textChip: "text-[#0055FF]",
+          textChipColor: "text-[#0055FF]",
+          textChipFunction: "Programado",
         };
 
       default:
         return {
           containerChip:
             "bg-red-1-custom/30 border-red-1-custom shadow-red-1-custom",
-          textChip: "text-red-1-custom",
+          textChipColor: "text-red-1-custom",
+          textChipFunction: "Agotado",
         };
     }
   };
   return (
-    <div className="flex-1 h-auto bg-black-2-custom rounded-[15px] px-10 py-8 border border-transparent hover:border-green-1-custom hover:shadow hover:shadow-green-1-custom transition-all duration-200 ease-in-out">
+    <div className="flex-1 bg-black-2-custom rounded-[15px] px-10 py-8 border h-fit border-transparent hover:border-green-1-custom hover:shadow hover:shadow-green-1-custom transition-all duration-200 ease-in-out">
       <div className="flex items-center justify-between gap-4">
         <div className="flex flex-col gap-1 items-center  flex-1">
-          <img className="h-[60px]" src={ImageOnceCaldas} alt="" />
-          <p className="text-white text-[14px] font-semibold   min-h-11 text-center">Once caldas</p>
+          <img className="h-[60px]" src={match?.local?.image_url} alt="" />
+          <p className="text-white text-[14px] font-semibold   min-h-11 text-center">
+            {match?.local?.name}
+          </p>
         </div>
         <div className="">
           <h1 className="text-[20px] font-black">VS</h1>
         </div>
         <div className="flex flex-col gap-1 items-center  flex-1">
-          <img className="h-[60px]" src={ImageNacional} alt="" />
+          <img className="h-[60px]" src={match?.visitor?.image_url} alt="" />
           <p className="text-white text-[14px] font-semibold  text-center min-h-11">
-            Atletico Nacional
+            {match?.visitor?.name}
           </p>
         </div>
       </div>
@@ -61,12 +91,12 @@ export const CardInfoMatch = ({ textChip = "En venta" }: Props) => {
         <span className="flex items-center gap-2">
           <i className="fi fi-tr-calendar-day text-[12px] flex"></i>
           <p className="text-[12px] text-white font-light">
-            15 Nov 2025 - 08:00 am
+            {formattedBirthday} - {formatTo12Hour(match?.match_hour)}
           </p>
         </span>
         <span className="flex items-center gap-2">
           <i className="fi fi-rs-marker text-[12px] flex"></i>
-          <p className="text-[12px] text-white font-light">Palogrande</p>
+          <p className="text-[12px] text-white font-light">{match?.stadium}</p>
         </span>
       </div>
       <div className="flex justify-center items-center py-8">
@@ -75,8 +105,8 @@ export const CardInfoMatch = ({ textChip = "En venta" }: Props) => {
             colorChip().containerChip
           }`}
         >
-          <p className={`font-normal text-[14px] ${colorChip().textChip}`}>
-            {textChip}
+          <p className={`font-normal text-[14px] ${colorChip().textChipColor}`}>
+            {colorChip().textChipFunction}
           </p>
         </div>
       </div>
@@ -95,13 +125,19 @@ export const CardInfoMatch = ({ textChip = "En venta" }: Props) => {
         </p>
       </div>
       <div className=" mt-8 grid xl:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Editar">
+        <Tooltip
+          classNames={{ content: "bg-red-800 text-white" }}
+          content="Editar"
+        >
           <Button className="w-full h-10 rounded-lg border border-white bg-gray-2-custom">
             <i className="fi fi-rr-edit text-[18px] text-white flex"></i>
             <p className=" font-bold text-white lg:hidden flex">Editar</p>
           </Button>
         </Tooltip>
-        <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Ver detalles">
+        <Tooltip
+          classNames={{ content: "bg-red-800 text-white" }}
+          content="Ver detalles"
+        >
           <Button
             onPress={() => navigateInfoMatch()}
             className="w-full h-10 rounded-lg border border-white bg-gray-2-custom"
@@ -110,7 +146,10 @@ export const CardInfoMatch = ({ textChip = "En venta" }: Props) => {
             <p className=" font-bold text-white lg:hidden flex">Ver detalles</p>
           </Button>
         </Tooltip>
-        <Tooltip classNames={{ content:"bg-red-800 text-white"}} content="Cancelar partido">
+        <Tooltip
+          classNames={{ content: "bg-red-800 text-white" }}
+          content="Cancelar partido"
+        >
           <Button className="w-full h-10 rounded-lg bg-red-1-custom xl:col-span-full col-span-1">
             <i className="fi fi-rr-ban text-[18px] text-white flex"></i>
             <p className=" font-bold text-white lg:hidden flex">
@@ -122,4 +161,3 @@ export const CardInfoMatch = ({ textChip = "En venta" }: Props) => {
     </div>
   );
 };
-

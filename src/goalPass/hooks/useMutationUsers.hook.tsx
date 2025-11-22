@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteUserAction, updateUserAction } from "../actions";
-import type { ResponseGetUsers, ResponseUpdateUser } from "../interfaces";
+import type { ResponseGetUsers } from "../interfaces";
 
 export const useMutationUsers = () => {
   const queryclient = useQueryClient();

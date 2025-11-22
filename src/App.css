@@ -21,6 +21,7 @@
 [data-slot="value"] {
   color: white !important;
 }
+
 [data-slot="content"] {
   background-color: #272C31;
 }
@@ -31,12 +32,14 @@
   border: 1px solid #D9D9D9 !important;
   background-color: transparent;
 }
+
 [data-key="profile"]:hover {
-  border:none !important;
+  border: none !important;
   background-color: transparent !important;
 }
+
 [data-key="profile"] {
-  border:none !important;
+  border: none !important;
   background-color: transparent !important;
   cursor: default;
 }
@@ -51,6 +54,7 @@
   color: white;
 
 }
+
 [data-selected="true"] [data-hover="true"] {
   color: white;
 
@@ -77,6 +81,7 @@
 [data-slot="selectorIcon"] {
   stroke: white !important;
 }
+
 [data-slot="listbox"] {
   color: white !important;
 }
@@ -84,6 +89,10 @@
 [data-slot="calendar"] [data-slot="input-wrapper"] {
   border: 1px solid #D9D9D9;
   background-color: #272C31;
+}
+
+[aria-label="Cargando..."]>span {
+  color: white !important;
 }
 
 body {

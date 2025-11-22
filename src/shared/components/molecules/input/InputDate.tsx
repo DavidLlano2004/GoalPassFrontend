@@ -1,7 +1,11 @@
-
 import { I18nProvider } from "@react-aria/i18n";
-import { parseDate } from "@internationalized/date";
-import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import { parseDate, parseDateTime, now } from "@internationalized/date";
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 import { DatePicker } from "@heroui/react";
 
 interface ControlledDatePickerProps<T extends FieldValues> {
@@ -12,7 +16,9 @@ interface ControlledDatePickerProps<T extends FieldValues> {
   isRequired?: boolean;
   isDisabled?: boolean;
   errorMessage?: string;
-  defaultValue?: string;
+  withTime?: boolean; // Nueva prop para incluir hora
+  hideTimeZone?: boolean;
+  hourCycle?: 12 | 24;
 }
 
 export default function ControlledDatePicker<T extends FieldValues>({
@@ -21,32 +27,52 @@ export default function ControlledDatePicker<T extends FieldValues>({
   label = "Fecha de cumpleaños",
   isRequired = false,
   isDisabled = false,
-  defaultValue = "",
   errorMessage,
+  withTime = false, // Por defecto solo fecha
+  hideTimeZone = true,
+  hourCycle = 12,
 }: ControlledDatePickerProps<T>) {
+  // Convertir CalendarDate/ZonedDateTime a string
+  const calendarToString = (calendarDate: any): string | null => {
+    if (!calendarDate) return null;
 
-    const calendarToDateString = (calendarDate: any): string | null => {
-    if (
-      !calendarDate ||
-      !calendarDate.year ||
-      !calendarDate.month ||
-      !calendarDate.day
-    ) {
+    try {
+      if (withTime) {
+        // Formato con hora: "2025-11-22T14:30:00"
+        const year = calendarDate.year;
+        const month = String(calendarDate.month).padStart(2, "0");
+        const day = String(calendarDate.day).padStart(2, "0");
+        const hour = String(calendarDate.hour || 0).padStart(2, "0");
+        const minute = String(calendarDate.minute || 0).padStart(2, "0");
+        const second = String(calendarDate.second || 0).padStart(2, "0");
+
+        return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+      } else {
+        // Solo fecha: "2025-11-22"
+        const year = calendarDate.year;
+        const month = String(calendarDate.month).padStart(2, "0");
+        const day = String(calendarDate.day).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+      }
+    } catch (error) {
+      console.error("Error converting calendar to string:", error);
       return null;
     }
-
-    const year = calendarDate.year;
-    const month = String(calendarDate.month).padStart(2, "0");
-    const day = String(calendarDate.day).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
   };
 
-  const stringToCalendarDate = (dateString: string | null) => {
+  // Convertir string a CalendarDate/ZonedDateTime
+  const stringToCalendar = (dateString: string | null) => {
     if (!dateString) return null;
 
     try {
-      return parseDate(dateString);
+      if (withTime) {
+        // Parsear fecha con hora
+        return parseDateTime(dateString);
+      } else {
+        // Parsear solo fecha
+        return parseDate(dateString);
+      }
     } catch (error) {
       console.error("Error parsing date:", error);
       return null;
@@ -58,18 +84,22 @@ export default function ControlledDatePicker<T extends FieldValues>({
       control={control}
       name={name}
       rules={{
-        required: isRequired,
+        required: isRequired ? "Este campo es requerido" : false,
       }}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <I18nProvider locale="es">
           <DatePicker
-            value={stringToCalendarDate(value)}
+            value={stringToCalendar(value)}
             onChange={(newDate: any) => {
-              const formatted = calendarToDateString(newDate);
+              const formatted = calendarToString(newDate);
               onChange(formatted);
             }}
-            defaultValue={defaultValue}
             showMonthAndYearPickers
+            hideTimeZone={hideTimeZone}
+            hourCycle={withTime ? hourCycle : undefined}
+            {...(withTime && {
+              placeholderValue: now("America/Bogota"),
+            })}
             label={label}
             variant="bordered"
             isDisabled={isDisabled}
@@ -85,7 +115,7 @@ export default function ControlledDatePicker<T extends FieldValues>({
               calendarContent: "bg-gray-2-custom",
               timeInput: "bg-gray-2-custom",
               timeInputLabel: "!text-white",
-              errorMessage: "text-red-500 text-sm mt-1",
+              errorMessage: "text-[#F31260] text-xs mt-[1px]",
             }}
           />
         </I18nProvider>

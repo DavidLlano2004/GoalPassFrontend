@@ -35,6 +35,7 @@ export const FormUpdateUser = ({
         last_name: userInfoState.last_name || "",
         identification_type: userInfoState.identification_type || "",
         identification: userInfoState.identification || "",
+        birthday: userInfoState.birthday || "",
         email: userInfoState.email || "",
         rol: userInfoState.rol || "",
       });
@@ -43,7 +44,6 @@ export const FormUpdateUser = ({
   return (
     <div className="grid grid-cols-2 gap-4">
       <InputSimple
-        defaultValue={`${userInfoState?.name}`}
         control={control}
         nameRegister="name"
         label="Nombres"
@@ -52,14 +52,12 @@ export const FormUpdateUser = ({
         control={control}
         nameRegister="last_name"
         label="Apellidos"
-        defaultValue={`${userInfoState?.last_name}`}
       />
       <div className=" col-span-2">
         <InputSimple
           startContent={
             <div className="flex items-center">
               <select
-                defaultValue={`${userInfoState?.identification_type}`}
                 className="outline-solid outline-transparent border-0 bg-transparent text-default-400 text-small"
                 id="identification_type"
                 {...register("identification_type")}
@@ -72,7 +70,6 @@ export const FormUpdateUser = ({
           control={control}
           nameRegister="identification"
           label="Identificación"
-          defaultValue={`${userInfoState?.identification}`}
         />
       </div>
       <div className=" col-span-2">
@@ -93,7 +90,6 @@ export const FormUpdateUser = ({
           control={control}
           name="birthday"
           label="Fecha de cumpleaños"
-          // defaultValue={userInfoState?.birthday}
         />
       </div>
       <div className=" col-span-2">
@@ -102,7 +98,6 @@ export const FormUpdateUser = ({
           nameRegister="email"
           label="Correo electrónico"
           type="email"
-          defaultValue={userInfoState?.email}
         />
       </div>
     </div>

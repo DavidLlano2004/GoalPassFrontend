@@ -15,6 +15,7 @@ import { useMutationRegister } from "../../auth/hooks/useMutationRegister.hooks"
 import { useMutationUsers } from "../hooks/useMutationUsers.hook";
 import { useState } from "react";
 import { FormUpdateUser } from "../components/molecules/forms/FormUpdateUser";
+import { ComponentUserInfo } from "../components/organims/ComponentUserInfo";
 
 export const UsersPage = () => {
   const { getUsersQuery } = useQueryUsers();
@@ -73,6 +74,12 @@ export const UsersPage = () => {
   } = useDisclosure();
 
   const {
+    isOpen: isOpenModalUserInfo,
+    onOpen: onOpenModalUserInfo,
+    onClose: onCloseModalUserInfo,
+  } = useDisclosure();
+
+  const {
     isOpen: isOpenModalDeleteUser,
     onOpen: onOpenModalDeleteUser,
     onClose: onCloseModalDeleteUser,
@@ -107,6 +114,11 @@ export const UsersPage = () => {
     resetUpdateUser();
     onCloseModalUpdateUser();
     setUserInfoState("");
+  };
+
+  const chooseUserInfo = (user: string) => {
+    onOpenModalUserInfo();
+    setUserInfoState(user);
   };
 
   const createUserFunction = () => {
@@ -224,6 +236,7 @@ export const UsersPage = () => {
             <TableUsers
               chooseUserByUpdate={chooseUserByUpdate}
               chooseUserByDelete={chooseUserByDelete}
+              chooseUserInfo={chooseUserInfo}
               dataTable={getUsersQuery.data?.users}
             />
           </div>
@@ -262,6 +275,13 @@ export const UsersPage = () => {
           control={controlUpdateUser}
           reset={resetUpdateUser}
         />
+      </ModalCustom>
+      <ModalCustom
+        isOpen={isOpenModalUserInfo}
+        onClose={onCloseModalUserInfo}
+        titleModal={"Detalles del usuario"}
+      >
+        <ComponentUserInfo userInfoState={userInfoState} />
       </ModalCustom>
       <ModalCustom
         onSubmitModal={deleteUserFunction}

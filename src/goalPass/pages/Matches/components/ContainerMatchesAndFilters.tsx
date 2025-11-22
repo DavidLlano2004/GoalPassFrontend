@@ -4,9 +4,10 @@ import { CardInfoMatch } from "../../../components/molecules/cards/CardInfoMatch
 
 interface Props {
   control: any;
+  dataMatches: any;
 }
 
-export const ContainerMatchesAndFilters = ({ control }: Props) => {
+export const ContainerMatchesAndFilters = ({ control, dataMatches }: Props) => {
   return (
     <div className="mt-6 flex-1 flex flex-col">
       <div className=" bg-black-2-custom w-full min-h-[100px] h-auto rounded-[15px] p-6 flex gap-4 flex-wrap">
@@ -47,10 +48,9 @@ export const ContainerMatchesAndFilters = ({ control }: Props) => {
         </div>
       </div>
       <div className="mt-4 flex-1 grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-4 auto-rows-auto">
-        <CardInfoMatch />
-        <CardInfoMatch textChip="Programado" />
-        <CardInfoMatch textChip="Agotado" />
-        <CardInfoMatch />
+        {dataMatches?.map((match: any) => (
+          <CardInfoMatch key={match?.id} match={match} textChip={match?.state} />
+        ))}
       </div>
     </div>
   );

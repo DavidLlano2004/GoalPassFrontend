@@ -1,59 +1,75 @@
 import { DatePicker } from "@heroui/react";
 import { I18nProvider } from "@react-aria/i18n";
 import { SelectSimple } from "../../../../shared/components/molecules/select/SelectSimple";
-import { getLocalTimeZone, now } from "@internationalized/date";
+import { now } from "@internationalized/date";
+import ControlledDatePicker from "../../../../shared/components/molecules/input/InputDate";
+import { useMemo } from "react";
 
 interface Props {
-  valuePicker?: any;
-  setValuePicker?: (v: any) => void;
   control: any;
+  teams: any;
+  dataFormCreateMatch: any;
 }
 
 export const FormCreateMatch = ({
-  valuePicker,
-  setValuePicker,
   control,
+  teams,
+  dataFormCreateMatch,
 }: Props) => {
+  const dataSelectTeamLocal =
+    teams?.map((team: any) => ({
+      key: team?.id,
+      label: team?.name,
+      iconSelect: team?.image_url,
+    })) ?? [];
+
+  const dataSelectTeamVisitor = useMemo(() => {
+    const validateTeamVisitor = teams?.filter(
+      (team: any) => team?.id != dataFormCreateMatch?.id_team_local
+    );
+
+    return (
+      validateTeamVisitor?.map((team: any) => ({
+        key: team?.id,
+        label: team?.name,
+        iconSelect: team?.image_url,
+      })) ?? []
+    );
+  }, [dataFormCreateMatch?.id_team_local]);
+
+  console.log("====================================");
+  console.log(dataFormCreateMatch);
+  console.log("====================================");
+
   return (
     <I18nProvider locale="">
       <div className=" border-white flex flex-col gap-4">
-        <DatePicker
-          // errorMessage="Seleccione la fecha y hora"
-          // isInvalid
-          value={valuePicker}
-          onChange={setValuePicker}
-          hideTimeZone
-          showMonthAndYearPickers
-          placeholderValue={now("America/Bogota")}
+        <ControlledDatePicker
+          control={control}
+          name="match_datetime"
           label="Fecha y hora del partido"
-          variant="bordered"
-          classNames={{
-            base: "w-full",
-            inputWrapper: `border bg-gray-2-custom border-gray-1-custom data-[focus=true]:border-blue-1-custom data-[focus=true]:shadow data-[focus=true]:shadow-blue-1-custom  rounded-[15px] p-1 px-5`,
-            label: "font-semibold text-[#929292]",
-            input: `!text-white text-base`,
-            calendarContent: "bg-gray-2-custom",
-            timeInput: "bg-gray-2-custom",
-            timeInputLabel: "!text-white",
-          }}
+          withTime
+          hideTimeZone
+          isRequired
         />
         <SelectSimple
           iconItem
           control={control}
-          nameRegister="rol"
+          nameRegister="id_team_local"
           label="Equipo local"
-          // options={dataSelectTeams}
-          validations={{ required: "Seleccione un rol" }}
+          options={dataSelectTeamLocal}
+          validations={{ required: "Seleccione un equipo" }}
           labelOption={""}
           uppercase={false}
         />
         <SelectSimple
+          isDisabled={!dataFormCreateMatch?.id_team_local}
           iconItem
           control={control}
-          nameRegister="rol"
+          nameRegister="id_team_visitor"
           label="Equipo visitante"
-          // options={dataSelectTeams}
-          validations={{ required: "Seleccione un rol" }}
+          options={dataSelectTeamVisitor}
+          validations={{ required: "Seleccione un equipo" }}
           labelOption={""}
           uppercase={false}
         />

@@ -23,6 +23,7 @@ interface SelectSimpleProps<T extends FieldValues> {
   keyOption?: string | null;
   labelOption: string;
   uppercase: boolean;
+  isDisabled?: boolean;
   onSelectionChange?: (selected: string | number) => void;
   [key: string]: any;
 }
@@ -40,6 +41,7 @@ export const SelectSimple = <T extends FieldValues>({
   uppercase = false,
   iconItem = false,
   onSelectionChange: onExternalChange,
+  isDisabled = false,
   ...rest
 }: SelectSimpleProps<T>) => {
   const dataSelect: Option[] =
@@ -66,6 +68,7 @@ export const SelectSimple = <T extends FieldValues>({
             field.onChange(selected);
             if (onExternalChange) onExternalChange(selected);
           }}
+          isDisabled={isDisabled}
           onBlur={field.onBlur}
           ref={field.ref}
           isInvalid={!!fieldState.error}
@@ -76,7 +79,6 @@ export const SelectSimple = <T extends FieldValues>({
             trigger: `border bg-gray-2-custom border-gray-1-custom data-[focus=true]:border-blue-1-custom data-[focus=true]:shadow data-[focus=true]:shadow-blue-1-custom  rounded-[15px] p-1 px-5`,
             label: "font-semibold text-[#929292]",
             value: `text-white text-base ${uppercase && "uppercase"}`,
-            
           }}
           {...rest}
         >
