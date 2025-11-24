@@ -41,7 +41,7 @@ export const MatchByIdUser = () => {
       }}
       className="overflow-hidden flex-1 flex flex-col bg-no-repeat"
     >
-      <div className="flex-1 overflow-y-auto bg-black/70">
+      <div className="flex-1  overflow-y-auto bg-black/70">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -93,7 +93,7 @@ export const MatchByIdUser = () => {
               </div>
             </div>
           </div>
-          <div className="grid xl:grid-cols-[2fr_1fr] lg:grid-cols-[1.2fr_1fr] grid-cols-1 p-4 gap-4 ">
+          <div className="grid xl:grid-cols-[2fr_1fr] lg:grid-cols-[1.2fr_1fr] grid-cols-1 p-4 gap-4 w-full max-w-[1123px] mx-auto ">
             <div className="bg-black-2-custom min-h-[880px] rounded-[15px] p-8">
               <div className="flex items-center gap-3">
                 <i className="fi fi-tr-cart-shopping-fast text-[20px] text-white flex"></i>

@@ -67,6 +67,7 @@ interface Props {
   nameRegister: string;
   validations?: any;
   label?: string;
+  isDisabled?: boolean;
 }
 
 export const InputPassword = ({
@@ -74,6 +75,7 @@ export const InputPassword = ({
   nameRegister,
   validations,
   label = "Contraseña",
+  isDisabled = false
 }: Props) => {
   const [isVisible, setIsVisible] = React.useState(false);
 
@@ -93,6 +95,7 @@ export const InputPassword = ({
           variant="bordered"
           isInvalid={!!fieldState.error}
           errorMessage={fieldState.error?.message}
+          isDisabled={isDisabled}
           endContent={
             <button
               type="button"

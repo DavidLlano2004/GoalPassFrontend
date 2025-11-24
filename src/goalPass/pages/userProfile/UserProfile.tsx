@@ -1,13 +1,18 @@
 import { motion } from "framer-motion";
-import { ButtonSimple } from "../../../shared/components/molecules/buttons/ButtonSimple";
 import { MyInformation } from "./sections/MyInformation";
 import { MyTickets } from "./sections/MyTickets";
 import { MyHistory } from "./sections/MyHistory";
 import { useState } from "react";
 import { CardStadisticsProfile } from "../../components/molecules/cards/CardStadisticsProfile";
+import { useQueryMe } from "../../hooks/useQueryMe.hook";
+import { Spinner } from "@heroui/spinner";
 
 export const UserProfile = () => {
+  const { getMeQuery } = useQueryMe();
   const [currentSection, setCurrentSection] = useState(0);
+
+ 
+
   const optionsSection = [
     {
       id: 0,
@@ -26,10 +31,18 @@ export const UserProfile = () => {
     },
   ];
   const SECTIONS_PROFILE = {
-    0: <MyInformation />,
+    0: <MyInformation userInformation={getMeQuery.data?.user} />,
     1: <MyTickets />,
     2: <MyHistory />,
   };
+
+  if (getMeQuery.isLoading) {
+    return (
+      <div className="flex-1 flex justify-center items-center">
+        <Spinner size="lg" color="white" label="Cargando..." />
+      </div>
+    );
+  }
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}
@@ -57,7 +70,7 @@ export const UserProfile = () => {
       </div>
 
       <div className="w-full max-w-[1123px] mt-3 xl:flex-row flex flex-col justify-between gap-3">
-        <div className="xl:max-w-[769px] w-full flex flex-col overflow-hidden h-[700px] rounded-[15px] bg-black-2-custom sm:p-10 p-8 xl:order-1 order-2">
+        <div className="xl:max-w-[769px] w-full flex flex-col overflow-hidden h-[710px] rounded-[15px] bg-black-2-custom sm:p-10 p-8 xl:order-1 order-2">
           <div className="flex gap-3 overflow-x-auto pb-3">
             {optionsSection?.map((data, i) => (
               <button
@@ -116,6 +129,7 @@ export const UserProfile = () => {
           </div>
         </div>
       </div>
+     
     </motion.div>
   );
 };

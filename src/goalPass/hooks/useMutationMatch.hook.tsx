@@ -1,6 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createMatchAction } from "../actions";
-import type { ResponseGetMatches } from "../interfaces";
+import {
+  editMatchAction,
+  createMatchAction,
+  deleteMatchAction,
+} from "../actions";
+import type { ResponseGetMatch, ResponseGetMatches } from "../interfaces";
 
 interface PropsDataForm {
   id_team_local: string;
@@ -24,5 +28,39 @@ export const useMutationMatch = () => {
     },
   });
 
-  return {createMatchMutation};
+  const deleteMatchMutation = useMutation({
+    mutationFn: async (matchId: string) => deleteMatchAction(matchId),
+    onSuccess: (_, matchId) => {
+      queryclient.setQueryData<ResponseGetMatches>(["matches"], (old) => {
+        if (!old) return { matches: [] };
+        return {
+          matches: old?.matches?.filter((team) => team.id != matchId) || [],
+        };
+      });
+    },
+  });
+
+  const editMatchMutation = useMutation({
+    mutationFn: async ({ dataForm, matchId }: any) => editMatchAction(dataForm , matchId),
+    onSuccess: (data) => {
+      queryclient.setQueryData<ResponseGetMatch>(
+        ["match", data.match.id],
+        data
+      );
+      queryclient.setQueryData<{ matches: ResponseGetMatches[] }>(
+        ["matches"],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            matches: oldData.matches.map((match) =>
+              match.id === data.match.id ? data.match : match
+            ),
+          };
+        }
+      );
+    },
+  });
+
+  return { createMatchMutation, deleteMatchMutation, editMatchMutation };
 };
