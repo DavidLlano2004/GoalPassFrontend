@@ -1,12 +1,24 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ButtonSimple } from "../../../../../shared/components/molecules/buttons/ButtonSimple";
+import type { Stand } from "../../../Matches";
+import { useFormatNumber } from "../../../../../shared/hooks/useFormatNumber";
 
 interface Props {
   actionPay: () => void;
+  soccerStandInfo: Stand;
+  totalPrice?: number;
+  numberTickets?: number;
+  setNumberTickets: (value: number) => void;
 }
 
-export const Step1 = ({ actionPay }: Props) => {
-  const [numberTickets, setNumberTickets] = useState(1);
+export const Step1 = ({
+  actionPay,
+  soccerStandInfo,
+  totalPrice,
+  numberTickets = 1,
+  setNumberTickets,
+}: Props) => {
+  const { formatNumber } = useFormatNumber();
 
   const addTickets = () => {
     setNumberTickets(numberTickets + 1);
@@ -15,11 +27,14 @@ export const Step1 = ({ actionPay }: Props) => {
   const removeTickets = () => {
     setNumberTickets(numberTickets - 1);
   };
+
+  
+
   return (
     <>
       <div className=" rounded-[15px] bg-gray-2-custom w-full h-[78px] py-4 px-6 flex flex-col justify-center">
         <p className="text-[14px] font-light">Grada seleccionada</p>
-        <p className="font-bold text-base">Occidental</p>
+        <p className="font-bold text-base">{soccerStandInfo.stand_name}</p>
       </div>
       <div className="mt-8">
         <p className="text-[16px] font-light">Cantidad de boletas</p>
@@ -47,13 +62,16 @@ export const Step1 = ({ actionPay }: Props) => {
             heightButton="h-[30px]"
             bgColorButton="bg-gray-2-custom"
             actionButton={addTickets}
+            isDisabled={numberTickets === 10}
           />
         </div>
       </div>
       <div className="border-b border-t mt-6 py-4 flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <p className="font-light text-[16px]">Precio unitario</p>
-          <p className="text-[16px] font-semibold">$50,000</p>
+          <p className="text-[16px] font-semibold">
+            $ {formatNumber(soccerStandInfo.price)}
+          </p>
         </div>
         <div className="flex items-center justify-between">
           <p className="font-light text-[16px]">Boletas</p>
@@ -62,7 +80,9 @@ export const Step1 = ({ actionPay }: Props) => {
       </div>
       <div className="flex items-center justify-between mt-6 mb-6">
         <p className="font-light text-[16px]">Total</p>
-        <p className="text-[16px] font-semibold">$50,000</p>
+        <p className="text-[16px] font-semibold">
+          $ {formatNumber(totalPrice || 0)}
+        </p>
       </div>
       <ButtonSimple
         startContent={

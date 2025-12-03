@@ -1,13 +1,39 @@
 import React from "react";
 import { Icons } from "../../../../assets/icons/IconsProvider";
 import { ButtonSimple } from "../../../../shared/components/molecules/buttons/ButtonSimple";
+import type { Ticket } from "../../../interfaces/getMyTickets.interface";
 const { IconQrLgBlack, IconQrOutlineWhite } = Icons;
 
 interface Props {
   stateTicket: boolean;
+  ticket: Ticket;
 }
 
-export const CardTicketProfile = ({ stateTicket = true }: Props) => {
+export const CardTicketProfile = ({ stateTicket = true, ticket }: Props) => {
+  const formattedBirthday = ticket?.match?.match_date
+    ? new Date(ticket?.match?.match_date).toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : null;
+
+  const formatTo12Hour = (time: string) => {
+    if (!time) return "";
+
+    const [hourStr, minute] = time.split(":");
+    let hour = parseInt(hourStr, 10);
+
+    const ampm = hour >= 12 ? "PM" : "AM";
+
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
+
+    const hourFormatted = String(hour).padStart(2, "0");
+
+    return `${hourFormatted}:${minute} ${ampm}`;
+  };
+
   return (
     <div className="w-full bg-gray-2-custom rounded-[15px] lg:flex-row flex-col flex items-center p-8 gap-5">
       <div className="flex flex-col gap-1">
@@ -34,29 +60,35 @@ export const CardTicketProfile = ({ stateTicket = true }: Props) => {
           stateTicket ? "justify-between lg:gap-0 gap-8" : "gap-3"
         }  lg:items-start items-center h-full `}
       >
-        <h1 className="text-[20px] font-bold">
-          Once caldas vs Atletico nacional
+        <h1 className="text-[20px] font-bold text-center">
+          {ticket.match.local.name} vs {ticket.match.visitor.name}
         </h1>
-        <div className=" flex gap-4 flex-wrap justify-center">
+
+        <div className=" flex gap-5 flex-wrap">
           <div className="flex items-center gap-2">
             <i className="fi fi-tr-calendar-day flex text-[14px]"></i>
-            <p className="text-[14px]">15 Nov 2025</p>
+            <p className="text-[14px]">{formattedBirthday}</p>
           </div>
           <div className="flex items-center gap-2">
             <i className="fi fi-tr-clock-five flex text-[14px]"></i>
-            <p className="text-[14px]">08:00 am</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <i className="fi fi-tr-court-sport flex text-[14px]"></i>
-            <p className="text-[14px]">Estadio Palogrande</p>
+            <p className="text-[14px]">
+              {formatTo12Hour(ticket.match.match_hour)}
+            </p>
           </div>
         </div>
-        <div className="sm:flex-row flex-col flex items-center gap-6">
+        <div className="flex items-center gap-2">
+          <i className="fi fi-tr-court-sport flex text-[14px]"></i>
+          <p className="text-[14px]">{ticket.match.stadium}</p>
+        </div>
+
+        <div className="sm:flex-row flex-col flex items-start gap-6 sm:w-auto w-full">
           <div className="flex items-center gap-2">
             <i className="fi fi-rr-marker flex text-[14px]"></i>
-            <p className="text-[14px]">Occidental</p>
+            <p className="text-[14px]">
+              {ticket.msp?.stand?.name}
+            </p>
           </div>
-          <p className="text-[14px]">Fila 12 - Asiento 45</p>
+          <p className="text-[14px]">{ticket?.seat_info}</p>
         </div>
         {stateTicket && (
           <ButtonSimple

@@ -24,4 +24,5 @@ export const paths = {
   TicketMatch: "/home-layout/ticket-match/:id",
 
   ProfileUser: "/home-layout/profile",
+  GoogleSuccess: "/auth/success",
 };

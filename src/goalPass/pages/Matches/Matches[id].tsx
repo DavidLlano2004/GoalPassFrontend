@@ -7,15 +7,22 @@ import { useMutationMatch, useQueryMatches, useQueryTeams } from "../../hooks";
 import { useDisclosure } from "@heroui/react";
 import { ModalCustom } from "../../../shared/components/organims/modals/ModalCustom";
 import { useForm } from "react-hook-form";
-import { useEffect, useMemo } from "react";
+import {  useEffect, useMemo } from "react";
 import { FormEditMatch } from "../../components/molecules/forms/FormEditMatch";
 import { convertTo24Hour } from "../../../helpers/convertTo24Hour";
+import { useQueryTickets } from "../../hooks/useQueryTickets.hook";
+import { useFormatNumber } from "../../../shared/hooks/useFormatNumber";
+import { useQuerySoccerStands } from "../../hooks/useQuerySoccerStands.hook";
+import PieChart from "../../../shared/components/organims/charts/PieChart";
 
 export const InfoOneMatch = () => {
+  const { formatNumber } = useFormatNumber();
   const { getTeamsQuery } = useQueryTeams();
   const { deleteMatchMutation, editMatchMutation } = useMutationMatch();
   const { id } = useParams();
   const { getMatchQuery } = useQueryMatches(id);
+  const { getTicketsByMatchQuery } = useQueryTickets(id!);
+  const { getSoccerStandsSummary } = useQuerySoccerStands(id!);
 
   const navigate = useNavigate();
 
@@ -39,7 +46,6 @@ export const InfoOneMatch = () => {
 
   const { control, watch, reset } = useForm();
   const dataForm = watch();
-  console.log(dataForm);
 
   const formattedDate = getMatchQuery?.data?.match?.match_date
     ? new Date(getMatchQuery?.data?.match?.match_date).toLocaleDateString(
@@ -129,9 +135,6 @@ export const InfoOneMatch = () => {
       ...dataForm,
       stadium: teamLocal?.stadium,
     };
-    console.log('====================================');
-    console.log(newData);
-    console.log('====================================');
     editMatchMutation.mutate(
       { dataForm: newData, matchId: id },
       {
@@ -142,7 +145,19 @@ export const InfoOneMatch = () => {
     );
   };
 
-  const isLoading = getTeamsQuery.isLoading || getMatchQuery.isLoading;
+  const dataPieChart = useMemo(() => {
+    const stands = getSoccerStandsSummary.data?.response?.stands || [];
+    return stands.map((stand) => ({
+      name: stand.stand_name,
+      value: stand.tickets_sold,
+    }));
+  }, [getSoccerStandsSummary.data]);
+
+  const isLoading =
+    getTeamsQuery.isLoading ||
+    getMatchQuery.isLoading ||
+    getTicketsByMatchQuery.isLoading ||
+    getSoccerStandsSummary.isLoading;
 
   useEffect(() => {
     if (getMatchQuery.data != null) {
@@ -168,6 +183,7 @@ export const InfoOneMatch = () => {
       });
     }
   }, [getMatchQuery.data, reset]);
+
 
   return (
     <motion.div
@@ -199,7 +215,9 @@ export const InfoOneMatch = () => {
                     <i className="fi fi-tr-calendar-day text-[14px] flex"></i>
                     <p className="text-[14px] text-white font-light">
                       {formattedDate} -{" "}
-                      {formatTo12Hour(getMatchQuery?.data?.match?.match_hour)}
+                      {formatTo12Hour(
+                        getMatchQuery?.data?.match?.match_hour ?? ""
+                      )}
                     </p>
                   </span>
                   <span className="flex items-center gap-2">
@@ -226,7 +244,9 @@ export const InfoOneMatch = () => {
                       <i className="fi fi-tr-calendar-day text-[12px] flex"></i>
                       <p className="text-[12px] text-white font-light">
                         {formattedDate} -{" "}
-                        {formatTo12Hour(getMatchQuery?.data?.match?.match_hour)}
+                        {formatTo12Hour(
+                          getMatchQuery?.data?.match?.match_hour ?? ""
+                        )}
                       </p>
                     </span>
                     <span className="flex items-center gap-2">
@@ -252,23 +272,32 @@ export const InfoOneMatch = () => {
               <div className="flex flex-col justify-between lg:items-end items-center flex-1 lg:mt-0 mt-6 lg:gap-0 gap-3">
                 <div
                   className={`w-[120px] h-[30px] rounded-lg border grid place-items-center ${
-                    colorChip(getMatchQuery?.data?.match?.state).containerChip
+                    colorChip(getMatchQuery?.data?.match?.state ?? "")
+                      .containerChip
                   }`}
                 >
                   <p
                     className={`font-normal text-[14px] ${
-                      colorChip(getMatchQuery?.data?.match?.state).textChipColor
+                      colorChip(getMatchQuery?.data?.match?.state ?? "")
+                        .textChipColor
                     }`}
                   >
                     {
-                      colorChip(getMatchQuery?.data?.match?.state)
+                      colorChip(getMatchQuery?.data?.match?.state ?? "")
                         .textChipFunction
                     }
                   </p>
                 </div>
                 <div className=" flex flex-col">
                   <p className="text-white font-extrabold lg:text-end text-center">
-                    1200/2000
+                    {formatNumber(
+                      getTicketsByMatchQuery?.data?.response?.tickets_sold ?? 0
+                    )}{" "}
+                    /{" "}
+                    {formatNumber(
+                      getTicketsByMatchQuery?.data?.response?.total_capacity ??
+                        0
+                    )}
                   </p>
                   <p className="text-white font-extralight text-end">
                     Boletas vendidas
@@ -278,8 +307,8 @@ export const InfoOneMatch = () => {
             </div>
           </div>
 
-          <div className=" flex lg:flex-row flex-col gap-4 mt-4 ">
-            <div className=" bg-black-2-custom flex-[1.35] h-auto rounded-[15px] p-8 lg:order-1 order-2">
+          <div className=" flex xl:flex-row flex-col gap-4 mt-4 ">
+            <div className=" bg-black-2-custom flex-[1.35] h-auto rounded-[15px] p-8 xl:order-1 order-2">
               <div className="flex items-center gap-3">
                 <i className="fi fi-tr-court-sport text-[20px] text-white flex"></i>
                 <h1 className="text-[20px] text-white font-bold">
@@ -287,19 +316,10 @@ export const InfoOneMatch = () => {
                 </h1>
               </div>
               <div className="mt-8 flex flex-col gap-4">
-                <CardSoccerStands />
-                <CardSoccerStands
-                  nameSoccerStand="Oriental"
-                  textChip="Disponibles"
-                />
-                <CardSoccerStands
-                  nameSoccerStand="Norte"
-                  textChip="Pocas disponibles"
-                />
-                <CardSoccerStands
-                  nameSoccerStand="Sur"
-                  textChip="Sin disponibilidad"
-                />
+                {getSoccerStandsSummary.data?.response?.stands.map((stand) => (
+                  <CardSoccerStands key={stand.stand_id} soccerStand={stand} />
+                ))}
+
                 <div
                   className="w-full sm:h-[100px] min-h-[100px] rounded-[15px] p-px"
                   style={{
@@ -311,31 +331,55 @@ export const InfoOneMatch = () => {
                       <p className="text-[14px] font-light text-white">
                         Total vendidas
                       </p>
-                      <h1 className="text-[20px] font-bold">11,800</h1>
+                      <h1 className="text-[20px] font-bold">
+                        {formatNumber(
+                          getSoccerStandsSummary.data?.response?.totals
+                            ?.tickets_sold ?? 0
+                        )}
+                      </h1>
                     </div>
                     <div className="flex flex-col items-center">
                       <p className="text-[14px] font-light text-white">
                         Ocupación
                       </p>
-                      <h1 className="text-[20px] font-bold">72.5%</h1>
+                      <h1 className="text-[20px] font-bold">
+                        {formatNumber(
+                          getSoccerStandsSummary.data?.response?.totals
+                            ?.occupancy_percentage ?? 0
+                        )}
+                        %
+                      </h1>
                     </div>
                     <div className="flex flex-col items-center">
                       <p className="text-[14px] font-light text-white">
                         Ingresos totales
                       </p>
-                      <h1 className="text-[20px] font-bold">$526M</h1>
+                      <h1 className="text-[20px] font-bold">
+                        ${" "}
+                        {formatNumber(
+                          getSoccerStandsSummary.data?.response?.totals
+                            ?.total_revenue ?? 0
+                        )}
+                      </h1>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex-1 flex flex-col gap-4 lg:order-2 order-1">
-              <div className="bg-black-2-custom rounded-[15px] h-[340px] sm:order-1 order-2"></div>
+            <div className="flex-1 flex flex-col gap-4 xl:order-2 order-1">
+              <div className="bg-black-2-custom rounded-[15px] min-h-[350px] sm:order-1 order-2 flex flex-col">
+                <div className="flex items-center gap-3 px-8 mb-4 mt-6">
+                  <i className="fi fi-tr-court-sport text-[20px] text-white flex"></i>
+                  <h1 className="text-[20px] text-white font-bold">Ventas</h1>
+                </div>
+                <PieChart data={dataPieChart} />
+              </div>
               <div className="bg-black-2-custom rounded-[15px] h-fit p-8 sm:order-2 order-1">
                 <h1 className="text-white font-bold text-[20px]">Acciones</h1>
                 <div className="mt-6 flex flex-col gap-6">
                   <ButtonSimple
+                    idButton="edit-match-button"
                     actionButton={() => onOpenModalEditMatch()}
                     startContent={
                       <i className="fi fi-rr-edit text-[20px] text-white flex"></i>

@@ -21,6 +21,7 @@ import { ChooseMatches } from "../goalPass/pages/matchesUser/ChooseMatches";
 import { MatchByIdUser } from "../goalPass/pages/matchesUser/MatchByIdUser";
 import { TicketMatch } from "../goalPass/pages/matchesUser/TicketMatch";
 import { useAppSelector } from "../redux/hooks/reduxHooks";
+import { GoogleSuccess } from "../auth/pages/GoogleSuccess";
 export const AppRouter = () => {
   const { rol, isLogged } = useAppSelector((state: any) => state.auth);
   return (
@@ -156,6 +157,7 @@ export const AppRouter = () => {
             }
           />
         </Route>
+        <Route path={paths.GoogleSuccess} element={<GoogleSuccess />} />
       </Routes>
     </BrowserRouter>
   );

@@ -37,10 +37,6 @@ export const FormCreateMatch = ({
     );
   }, [dataFormCreateMatch?.id_team_local]);
 
-  console.log("====================================");
-  console.log(dataFormCreateMatch);
-  console.log("====================================");
-
   return (
     <I18nProvider locale="">
       <div className=" border-white flex flex-col gap-4">

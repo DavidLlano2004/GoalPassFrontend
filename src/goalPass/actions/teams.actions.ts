@@ -39,9 +39,6 @@ export const getAllTeamsAction = async () => {
 };
 
 export const deleteTeamAction = async (teamId: string) => {
-  console.log("====================================");
-  console.log(teamId);
-  console.log("====================================");
   await sleep(2000);
   try {
     const { data } = await apiGoalPass.delete<ResponseDeleteTeam>(

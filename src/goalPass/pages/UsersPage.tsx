@@ -198,10 +198,6 @@ export const UsersPage = () => {
     );
   };
 
-  console.log("====================================");
-  console.log(userInfoState);
-  console.log("====================================");
-
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}

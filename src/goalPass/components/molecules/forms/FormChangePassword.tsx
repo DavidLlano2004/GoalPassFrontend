@@ -7,14 +7,6 @@ export const FormChangePassword = ({ control, password }: any) => {
       <div className="col-span-2">
         <InputPassword
           control={control}
-          nameRegister="actually_password"
-          validations={{ required: "La contraseña actual es obligatoria" }}
-          label="Contraseña actual"
-        />
-      </div>
-      <div className="col-span-2">
-        <InputPassword
-          control={control}
           nameRegister="password"
           validations={{ required: "La contraseña es obligatoria" }}
           label="Nueva contraseña"

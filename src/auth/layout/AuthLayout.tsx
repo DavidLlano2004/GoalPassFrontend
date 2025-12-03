@@ -24,8 +24,6 @@ export const AuthLayout = () => {
     return <LoadingInit />;
   }
 
-  console.log(pathname);
-
   return (
     <motion.article
       initial={{ opacity: 0 }}

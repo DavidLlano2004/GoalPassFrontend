@@ -70,7 +70,7 @@ export const UserProfile = () => {
       </div>
 
       <div className="w-full max-w-[1123px] mt-3 xl:flex-row flex flex-col justify-between gap-3">
-        <div className="xl:max-w-[769px] w-full flex flex-col overflow-hidden h-[710px] rounded-[15px] bg-black-2-custom sm:p-10 p-8 xl:order-1 order-2">
+        <div className={`xl:max-w-[769px] w-full flex flex-col overflow-hidden ${currentSection === 0 ? "min-h-[710px]" : "h-[710px]"} rounded-[15px] bg-black-2-custom sm:p-10 p-8 xl:order-1 order-2`}>
           <div className="flex gap-3 overflow-x-auto pb-3">
             {optionsSection?.map((data, i) => (
               <button

@@ -12,14 +12,6 @@ export const SkeletonTeams = () => {
           <Skeleton className="rounded-[15px] min-w-[190px] w-full h-[50px] bg-[#8C8C90]" />
         </div>
       </div>
-      <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-6 flex-wrap">
-        {[1 , 2 , 3].map((item: any) => (
-          <Skeleton
-            key={item}
-            className="rounded-[15px] flex-1 h-[293px] bg-[#8C8C90]"
-          />
-        ))}
-      </div>
     </div>
   );
 };

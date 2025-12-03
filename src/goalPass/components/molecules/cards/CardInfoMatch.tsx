@@ -1,7 +1,9 @@
-import { Button, Tooltip } from "@heroui/react";
-import { Images } from "../../../../assets/images/ImagesProvider";
+import { Button } from "@heroui/react";
 import { generatePath, useNavigate } from "react-router";
 import { paths } from "../../../../routes/paths";
+import { useQueryTickets } from "../../../hooks/useQueryTickets.hook";
+import { SkeletonTicketsByMatch } from "../../../../shared/components/organims/skeletons/SkeletonTicketsByMatch";
+import { useFormatNumber } from "../../../../shared/hooks/useFormatNumber";
 
 interface Props {
   textChip?: string;
@@ -9,6 +11,9 @@ interface Props {
 }
 
 export const CardInfoMatch = ({ textChip = "En venta", match }: Props) => {
+  const { formatNumber } = useFormatNumber();
+  const { getTicketsByMatchQuery } = useQueryTickets(match?.id);
+
   const navigate = useNavigate();
 
   const formattedBirthday = match?.match_date
@@ -116,23 +121,46 @@ export const CardInfoMatch = ({ textChip = "En venta", match }: Props) => {
             </p>
           </div>
         </div>
-        <div className="">
-          <div className="flex justify-between items-center">
-            <p className="text-[14px] text-white font-extralight">
-              Boletas vendidas
+
+        {getTicketsByMatchQuery.isLoading ? (
+          <SkeletonTicketsByMatch />
+        ) : (
+          <div className="">
+            <div className="flex justify-between items-center">
+              <p className="text-[14px] text-white font-extralight">
+                Boletas vendidas
+              </p>
+              <p className="text-[14px] text-white font-bold">
+                {formatNumber(
+                  getTicketsByMatchQuery?.data?.response?.tickets_sold ?? 0
+                )}{" "}
+                /{" "}
+                {formatNumber(
+                  getTicketsByMatchQuery?.data?.response?.total_capacity ?? 0
+                )}
+              </p>
+            </div>
+
+            <div className="w-full bg-[#676767] rounded-lg h-2 my-2">
+              <div
+                style={{
+                  width: `${getTicketsByMatchQuery?.data?.response?.occupancy_percentage ?? 0}%`,
+                }}
+                className={` bg-linear-to-r from-blue-1-custom to-green-1-custom rounded-lg h-2`}
+              ></div>
+            </div>
+
+            <p className=" text-white font-bold text-[14px] text-center">
+              {getTicketsByMatchQuery?.data?.response?.occupancy_percentage ??
+                0}{" "}
+              % vendido
             </p>
-            <p className="text-[14px] text-white font-bold">800/2000</p>
           </div>
-          <div className="w-full bg-[#676767] rounded-lg h-2 my-2">
-            <div className="w-[60%] bg-linear-to-r from-blue-1-custom to-green-1-custom rounded-lg h-2"></div>
-          </div>
-          <p className="text-center text-white font-bold text-[14px]">
-            60% vendido
-          </p>
-        </div>
+        )}
       </div>
       <div className=" mt-8 grid grid-cols-1">
         <Button
+          isDisabled={getTicketsByMatchQuery.isLoading}
           onPress={() => navigateInfoMatch()}
           className="w-full h-10 rounded-lg border border-white bg-gray-2-custom"
         >

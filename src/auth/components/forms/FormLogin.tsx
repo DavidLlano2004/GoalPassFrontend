@@ -36,6 +36,10 @@ export const FormLogin = () => {
     });
   };
 
+  const handleGoogle = () => {
+    window.location.href = "http://localhost:4000/api/auth/google";
+  };
+
   return (
     <form
       onSubmit={handleSubmit(loginFunction)}
@@ -75,6 +79,7 @@ export const FormLogin = () => {
       </div>
       <div>
         <ButtonSimple
+          actionButton={handleGoogle}
           startContent={<img className="w-6" src={IconGoogle} />}
           textButton="Ingresar con google"
           widthButton="w-full"

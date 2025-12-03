@@ -102,7 +102,7 @@ export const MyInformation = ({ userInformation }: any) => {
         address: userInformation?.address || "Sin información",
         identification: userInformation?.identification || "Sin información",
         identification_type: userInformation?.identification_type || "CC",
-        birthday: userInformation?.birthday || "Sin información",
+        birthday: userInformation?.birthday,
       });
     }
   }, [userInformation]);
