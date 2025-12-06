@@ -51,12 +51,6 @@ export const UserProfile = () => {
     );
   }
 
-  console.log("====================================");
-  console.log(getHistoryPurchaseMatchesQuery.data?.data);
-  console.log("====================================");
-
-  console.log(getMeQuery.data?.user);
-
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}

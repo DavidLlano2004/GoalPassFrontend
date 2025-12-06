@@ -61,9 +61,6 @@ export const MatchByIdUser = () => {
 
   const isLoading = getMatchQuery.isLoading;
 
-  console.log(getSoccerStandsSummary?.data?.response.stands);
-  
-
 
   return (
     <div

@@ -25,10 +25,6 @@ export const DashBoard = () => {
     );
   }
 
-  console.log("====================================");
-  console.log(getInfoDashboardQuery.data?.data);
-  console.log("====================================");
-
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}

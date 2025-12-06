@@ -22,7 +22,6 @@ export const ReportsPage = () => {
       </div>
     );
   }
-  console.log(getInfoReportsQuery.data?.data);
 
   return (
     <motion.div

@@ -38,7 +38,6 @@ export const SimulationInfoMatchPage = ({
 
     return `${hourFormatted}:${minute} ${ampm}`;
   };
-  console.log(dataMatch);
 
   return (
     <motion.div

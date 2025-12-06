@@ -36,7 +36,6 @@ export const SimulationLayout = () => {
     });
   };
 
-  console.log(dataMatch);
 
   const SIMULATION_PAGES = {
     0: (

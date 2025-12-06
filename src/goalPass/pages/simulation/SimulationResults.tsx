@@ -23,10 +23,6 @@ export const SimulationResults = ({
     </div>;
   }
 
-  console.log("====================================");
-  console.log(getSimulationMatchQuery.data?.data);
-  console.log("====================================");
-
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}
