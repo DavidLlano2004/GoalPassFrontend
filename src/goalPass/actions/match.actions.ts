@@ -6,6 +6,8 @@ import type {
   ResponseGetMatch,
   ResponseGetMatches,
 } from "../interfaces";
+import type { ResponseHistoryMatches } from "../interfaces/getHistoryMatches.interface";
+import type { ResponseGetHistoryPurchaseMatches } from "../interfaces/getHistoryPurchaseMatches.interfaces";
 
 interface PropsDataForm {
   id_team_local: string;
@@ -82,6 +84,32 @@ export const editMatchAction = async (dataForm: any, matchId: string) => {
       `/matches/${matchId}`,
       dataForm
     );
+    return data;
+  } catch (error: any) {
+    throw {
+      message: "Error inesperado",
+      error: error.response.data.message,
+    };
+  }
+};
+
+export const getHistoryMatchesAction = async () => {
+  await sleep(2000);
+  try {
+    const { data } = await apiGoalPass.get<ResponseHistoryMatches>("/matches/history");
+    return data;
+  } catch (error: any) {
+    throw {
+      message: "Error inesperado",
+      error: error.response.data.message,
+    };
+  }
+};
+
+export const getHistoryPurchaseMatchesAction = async () => {
+  await sleep(2000);
+  try {
+    const { data } = await apiGoalPass.get<ResponseGetHistoryPurchaseMatches>("/matches/purchase-stats");
     return data;
   } catch (error: any) {
     throw {

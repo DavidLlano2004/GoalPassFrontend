@@ -61,7 +61,7 @@ export const TableUsers = ({
                   : "border-blue-1-custom bg-blue-1-custom/30 text-[#0055ff]"
               }`}
             >
-              <p className="text-xs">{cellValue}</p>
+              <p className="text-xs capitalize">{cellValue}</p>
             </div>
           );
         case "actions":

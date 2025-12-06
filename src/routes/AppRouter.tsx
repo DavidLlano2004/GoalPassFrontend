@@ -11,7 +11,6 @@ import { SimulationLayout } from "../goalPass/pages/simulation/SimulationLayout"
 import { ReportsPage } from "../goalPass/pages/ReportsPage";
 import { UsersPage } from "../goalPass/pages/UsersPage";
 import { TeamsPage } from "../goalPass/pages/TeamsPage";
-import { HistoryMacthes } from "../goalPass/pages/HistoryMacthes";
 import { MatchesLayout } from "../goalPass/pages/Matches/MatchesLayout";
 import { Matches } from "../goalPass/pages/Matches/Matches";
 import { InfoOneMatch } from "../goalPass/pages/Matches/Matches[id]";
@@ -22,6 +21,9 @@ import { MatchByIdUser } from "../goalPass/pages/matchesUser/MatchByIdUser";
 import { TicketMatch } from "../goalPass/pages/matchesUser/TicketMatch";
 import { useAppSelector } from "../redux/hooks/reduxHooks";
 import { GoogleSuccess } from "../auth/pages/GoogleSuccess";
+import { HistoryMatchesLayout } from "../goalPass/pages/HistoryMatches/HistoryMatchesLayout";
+import { HistorySimulationMatch } from "../goalPass/pages/HistoryMatches/HistorySimulationMatch";
+import { HistoryPageMatches } from "../goalPass/pages/HistoryMatches/HistoryPageMatches";
 export const AppRouter = () => {
   const { rol, isLogged } = useAppSelector((state: any) => state.auth);
   return (
@@ -145,17 +147,26 @@ export const AppRouter = () => {
             }
           />
           <Route
-            path={paths.HistoryPage}
+            path={paths.HistoryPageLayout}
             element={
               <PrivateRoute
                 isAuthenticated={isLogged}
                 allowedRoles={["administrador"]}
                 userRole={rol}
               >
-                <HistoryMacthes />
+                <HistoryMatchesLayout />
               </PrivateRoute>
             }
-          />
+          >
+            <Route
+              path={paths.HistoryPageMatches}
+              element={<HistoryPageMatches />}
+            />
+            <Route
+              path={paths.HistoryPageSimulation}
+              element={<HistorySimulationMatch />}
+            />
+          </Route>
         </Route>
         <Route path={paths.GoogleSuccess} element={<GoogleSuccess />} />
       </Routes>

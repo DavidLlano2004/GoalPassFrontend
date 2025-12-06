@@ -17,7 +17,9 @@ export const paths = {
 
   TeamsPage: "/home-layout/teams",
 
-  HistoryPage: "/home-layout/history-matches",
+  HistoryPageLayout: "/home-layout/history-matches",
+  HistoryPageMatches: "/home-layout/history-matches",
+  HistoryPageSimulation: "/home-layout/history-matches/:id",
 
   ChooseMatchesUser: "/home-layout/",
   MatchByIdUser: "/home-layout/matches-user/:id",

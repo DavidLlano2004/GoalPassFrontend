@@ -62,6 +62,12 @@ export const CardInfoMatch = ({ textChip = "En venta", match }: Props) => {
           textChipColor: "text-[#0055FF]",
           textChipFunction: "Programado",
         };
+      case "finalizado":
+        return {
+          containerChip: "bg-gray-500/20  border-gray-500/50 shadow-gray-500",
+          textChipColor: "text-gray-100",
+          textChipFunction: "Finalizado",
+        };
 
       default:
         return {
@@ -110,7 +116,7 @@ export const CardInfoMatch = ({ textChip = "En venta", match }: Props) => {
         </div>
         <div className="flex justify-center items-center py-8">
           <div
-            className={`w-[120px] h-[30px] rounded-lg border grid place-items-center ${
+            className={`w-[120px] h-[30px] rounded-lg border shadow grid place-items-center ${
               colorChip().containerChip
             }`}
           >
@@ -151,8 +157,10 @@ export const CardInfoMatch = ({ textChip = "En venta", match }: Props) => {
             </div>
 
             <p className=" text-white font-bold text-[14px] text-center">
-              {getTicketsByMatchQuery?.data?.response?.occupancy_percentage ??
-                0}{" "}
+              {Math.round(
+                getTicketsByMatchQuery?.data?.response?.occupancy_percentage ??
+                  0
+              )}{" "}
               % vendido
             </p>
           </div>

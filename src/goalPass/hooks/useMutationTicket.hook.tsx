@@ -16,6 +16,7 @@ export const useMutationTicket = () => {
     mutationFn: async (dataForm: dataForm) => createTicketAction(dataForm),
     onSuccess: (data) => {
       queryClient.refetchQueries({ queryKey: ["myTickets"] });
+      queryClient.refetchQueries({ queryKey: ["history-matches-purchase"] });
       queryClient.refetchQueries({
         queryKey: ["soccer-stands-summary", data?.ticket?.id_matches],
       });

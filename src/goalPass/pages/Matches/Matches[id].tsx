@@ -4,10 +4,10 @@ import { CardSoccerStands } from "../../components/molecules/cards/CardSoccerSta
 import { motion } from "framer-motion";
 import { Spinner } from "@heroui/spinner";
 import { useMutationMatch, useQueryMatches, useQueryTeams } from "../../hooks";
-import { useDisclosure } from "@heroui/react";
+import { addToast, useDisclosure } from "@heroui/react";
 import { ModalCustom } from "../../../shared/components/organims/modals/ModalCustom";
 import { useForm } from "react-hook-form";
-import {  useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { FormEditMatch } from "../../components/molecules/forms/FormEditMatch";
 import { convertTo24Hour } from "../../../helpers/convertTo24Hour";
 import { useQueryTickets } from "../../hooks/useQueryTickets.hook";
@@ -90,6 +90,12 @@ export const InfoOneMatch = () => {
           textChipColor: "text-[#0055FF]",
           textChipFunction: "Programado",
         };
+      case "finalizado":
+        return {
+          containerChip: "bg-gray-500/20  border-gray-500/50 shadow-gray-500",
+          textChipColor: "text-gray-100",
+          textChipFunction: "Finalizado",
+        };
 
       default:
         return {
@@ -108,6 +114,15 @@ export const InfoOneMatch = () => {
     deleteMatchMutation.mutate(id!, {
       onSuccess: () => {
         navigate(-1);
+        onCloseModalDeleteMatch();
+      },
+      onError: () => {
+        addToast({
+          title: "¡Ups!",
+          description:
+            "No puedes borrar este partido , ya se han comprado boletas",
+          color: "danger",
+        });
         onCloseModalDeleteMatch();
       },
     });
@@ -183,7 +198,6 @@ export const InfoOneMatch = () => {
       });
     }
   }, [getMatchQuery.data, reset]);
-
 
   return (
     <motion.div
@@ -271,7 +285,7 @@ export const InfoOneMatch = () => {
 
               <div className="flex flex-col justify-between lg:items-end items-center flex-1 lg:mt-0 mt-6 lg:gap-0 gap-3">
                 <div
-                  className={`w-[120px] h-[30px] rounded-lg border grid place-items-center ${
+                  className={`w-[120px] h-[30px] rounded-lg border grid place-items-center shadow ${
                     colorChip(getMatchQuery?.data?.match?.state ?? "")
                       .containerChip
                   }`}
@@ -317,7 +331,11 @@ export const InfoOneMatch = () => {
               </div>
               <div className="mt-8 flex flex-col gap-4">
                 {getSoccerStandsSummary.data?.response?.stands.map((stand) => (
-                  <CardSoccerStands key={stand.stand_id} soccerStand={stand} />
+                  <CardSoccerStands
+                    stateMatch={getMatchQuery?.data?.match?.state ?? ""}
+                    key={stand.stand_id}
+                    soccerStand={stand}
+                  />
                 ))}
 
                 <div
@@ -375,44 +393,46 @@ export const InfoOneMatch = () => {
                 </div>
                 <PieChart data={dataPieChart} />
               </div>
-              <div className="bg-black-2-custom rounded-[15px] h-fit p-8 sm:order-2 order-1">
-                <h1 className="text-white font-bold text-[20px]">Acciones</h1>
-                <div className="mt-6 flex flex-col gap-6">
-                  <ButtonSimple
-                    idButton="edit-match-button"
-                    actionButton={() => onOpenModalEditMatch()}
-                    startContent={
-                      <i className="fi fi-rr-edit text-[20px] text-white flex"></i>
-                    }
-                    textButton="Editar partido"
-                    widthButton="min-w-[190px] w-full"
-                    heightButton="h-[45px]"
-                  />
-                  <ButtonSimple
-                    actionButton={() => onOpenModalDeleteMatch()}
-                    startContent={
-                      <i className="fi fi-rr-trash text-[20px] text-white flex"></i>
-                    }
-                    borderGradient
-                    textButton="Borrar partido"
-                    widthButton="min-w-[190px] w-full"
-                    heightButton="h-[45px]"
-                    bgColorButton="bg-gray-2-custom"
-                  />
-                  {getMatchQuery?.data?.match?.state != "cancelado" && (
+              {getMatchQuery?.data?.match?.state != "finalizado" && (
+                <div className="bg-black-2-custom rounded-[15px] h-fit p-8 sm:order-2 order-1">
+                  <h1 className="text-white font-bold text-[20px]">Acciones</h1>
+                  <div className="mt-6 flex flex-col gap-6">
                     <ButtonSimple
-                      actionButton={() => onOpenModalCancelMatch()}
+                      idButton="edit-match-button"
+                      actionButton={() => onOpenModalEditMatch()}
                       startContent={
-                        <i className="fi fi-rr-ban text-[20px] text-white flex"></i>
+                        <i className="fi fi-rr-edit text-[20px] text-white flex"></i>
                       }
-                      bgColorButton="bg-red-1-custom/30 border-red-1-custom border"
-                      textButton="Cancelar partido"
+                      textButton="Editar partido"
                       widthButton="min-w-[190px] w-full"
                       heightButton="h-[45px]"
                     />
-                  )}
+                    <ButtonSimple
+                      actionButton={() => onOpenModalDeleteMatch()}
+                      startContent={
+                        <i className="fi fi-rr-trash text-[20px] text-white flex"></i>
+                      }
+                      borderGradient
+                      textButton="Borrar partido"
+                      widthButton="min-w-[190px] w-full"
+                      heightButton="h-[45px]"
+                      bgColorButton="bg-gray-2-custom"
+                    />
+                    {getMatchQuery?.data?.match?.state != "cancelado" && (
+                      <ButtonSimple
+                        actionButton={() => onOpenModalCancelMatch()}
+                        startContent={
+                          <i className="fi fi-rr-ban text-[20px] text-white flex"></i>
+                        }
+                        bgColorButton="bg-red-1-custom/30 border-red-1-custom border"
+                        textButton="Cancelar partido"
+                        widthButton="min-w-[190px] w-full"
+                        heightButton="h-[45px]"
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

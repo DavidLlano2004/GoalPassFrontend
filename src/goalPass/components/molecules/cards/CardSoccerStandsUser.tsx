@@ -8,25 +8,24 @@ interface Props {
   chooseCard: boolean;
 }
 export interface Stand {
-    stand_id:             string;
-    stand_name:           string;
-    description:          string;
-    total_capacity:       number;
-    price:                number;
-    tickets_sold:         number;
-    tickets_available:    number;
-    occupancy_percentage: number;
-    revenue:              number;
-    availability:         string;
+  stand_id: string;
+  stand_name: string;
+  description: string;
+  total_capacity: number;
+  price: number;
+  tickets_sold: number;
+  tickets_available: number;
+  occupancy_percentage: number;
+  revenue: number;
+  availability: string;
 }
-
 
 export const CardSoccerStandsUser = ({
   soccerStand,
   actionCard,
   chooseCard = false,
 }: Props) => {
-  const {formatNumber} =useFormatNumber()
+  const { formatNumber } = useFormatNumber();
   const colorChip = () => {
     switch (soccerStand.availability) {
       case "Disponibles":
@@ -53,8 +52,10 @@ export const CardSoccerStandsUser = ({
 
   return (
     <motion.div
-      onClick={actionCard}
-      className={`w-full hover:bg-linear-to-r from-blue-1-custom to-green-1-custom active:scale-[1.03] min-h-[194px] transition-all duration-200 ease-in rounded-[15px] p-px cursor-pointer ${
+      onClick={
+        soccerStand.availability != "Sin disponibilidad" ? actionCard : () => {}
+      }
+      className={`w-full ${soccerStand.availability != "Sin disponibilidad" && "hover:bg-linear-to-r cursor-pointer active:scale-[0.99]"}  from-blue-1-custom to-green-1-custom  min-h-[194px] transition-all duration-200 ease-in rounded-[15px] p-px  ${
         chooseCard
           ? "bg-linear-to-r from-blue-1-custom to-green-1-custom"
           : "bg-white"
@@ -73,26 +74,36 @@ export const CardSoccerStandsUser = ({
             <div
               className={`w-1.5 h-1.5 rounded-full ${colorChip().bgCircle}`}
             ></div>
-            <p className={`text-[12px] ${colorChip().textChip}`}>{soccerStand.availability}</p>
+            <p className={`text-[12px] ${colorChip().textChip}`}>
+              {soccerStand.availability}
+            </p>
           </div>
         </div>
         <div className="mt-3 flex justify-between items-center">
           <p className="text-[14px] font-light">
             Capacidad: {formatNumber(soccerStand.total_capacity)} personas
           </p>
-          <h1 className="text-[20px] font-extrabold">$ {formatNumber(soccerStand.price)}</h1>
+          <h1 className="text-[20px] font-extrabold">
+            $ {formatNumber(soccerStand.price)}
+          </h1>
         </div>
         <div className="mt-8">
           <div className="flex justify-between items-center">
             <p className="text-[14px] text-white font-extralight">
-              Disponibles: <b className="font-bold">{formatNumber(soccerStand.tickets_available)}</b>
+              Disponibles:{" "}
+              <b className="font-bold">
+                {formatNumber(soccerStand.tickets_available)}
+              </b>
             </p>
             <p className="text-[14px] text-white font-extralight">
-              {soccerStand.occupancy_percentage}% ocupado
+              {Math.round(soccerStand.occupancy_percentage ?? 0)}% ocupado
             </p>
           </div>
           <div className="w-full bg-[#676767] rounded-lg h-2.5 my-2">
-            <div style={{width:soccerStand.occupancy_percentage}} className=" bg-linear-to-r from-blue-1-custom to-green-1-custom rounded-lg h-2.5"></div>
+            <div
+              style={{ width: `${soccerStand.occupancy_percentage}%` }}
+              className=" bg-linear-to-r from-blue-1-custom to-green-1-custom rounded-lg h-2.5"
+            ></div>
           </div>
         </div>
       </div>

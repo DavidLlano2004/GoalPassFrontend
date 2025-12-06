@@ -5,6 +5,7 @@ import {
   deleteMatchAction,
 } from "../actions";
 import type { ResponseGetMatch, ResponseGetMatches } from "../interfaces";
+import type { ResponseHistoryMatches } from "../interfaces/getHistoryMatches.interface";
 
 interface PropsDataForm {
   id_team_local: string;
@@ -21,6 +22,7 @@ export const useMutationMatch = () => {
   const createMatchMutation = useMutation({
     mutationFn: async (dataForm: PropsDataForm) => createMatchAction(dataForm),
     onSuccess: (data) => {
+      queryclient.refetchQueries({ queryKey: ["info-dashboard"] });
       queryclient.setQueryData<ResponseGetMatches>(["matches"], (old) => {
         if (!old) return { matches: [data?.match] };
         return { matches: [...old.matches, data!.match] };
@@ -31,6 +33,7 @@ export const useMutationMatch = () => {
   const deleteMatchMutation = useMutation({
     mutationFn: async (matchId: string) => deleteMatchAction(matchId),
     onSuccess: (_, matchId) => {
+      queryclient.refetchQueries({ queryKey: ["info-dashboard"] });
       queryclient.setQueryData<ResponseGetMatches>(["matches"], (old) => {
         if (!old) return { matches: [] };
         return {
@@ -41,8 +44,13 @@ export const useMutationMatch = () => {
   });
 
   const editMatchMutation = useMutation({
-    mutationFn: async ({ dataForm, matchId }: any) => editMatchAction(dataForm , matchId),
+    mutationFn: async ({ dataForm, matchId }: any) =>
+      editMatchAction(dataForm, matchId),
     onSuccess: (data) => {
+      queryclient.refetchQueries({ queryKey: ["history-matches"] });
+      queryclient.refetchQueries({ queryKey: ["info-dashboard"] });
+      queryclient.refetchQueries({ queryKey: ["matches"] });
+
       queryclient.setQueryData<ResponseGetMatch>(
         ["match", data.match.id],
         data

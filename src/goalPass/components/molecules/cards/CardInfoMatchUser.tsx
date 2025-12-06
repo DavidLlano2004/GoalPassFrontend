@@ -135,7 +135,11 @@ export const CardInfoMatchUser = ({ match }: Props) => {
                 Disponibilidad
               </p>
               <p className="text-[14px] text-white font-bold">
-                {getTicketsByMatchQuery.data?.response.available_percentage}%
+                {Math.round(
+                  getTicketsByMatchQuery.data?.response.available_percentage ??
+                    0
+                )}
+                %
               </p>
             </div>
             <div className="w-full bg-[#676767] rounded-lg h-2 my-2">

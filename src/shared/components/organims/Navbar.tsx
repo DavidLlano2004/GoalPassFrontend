@@ -54,8 +54,8 @@ export const Navbar = () => {
     },
     {
       name: "Historial",
-      path: paths.HistoryPage,
-      matchPaths: [paths.HistoryPage],
+      path: paths.HistoryPageLayout,
+      matchPaths: [paths.HistoryPageLayout , paths.HistoryPageSimulation],
       iconActive: "fi fi-rr-time-past",
       iconInactive: "fi fi-rr-time-past",
     },

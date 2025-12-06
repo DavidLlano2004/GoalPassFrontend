@@ -66,6 +66,7 @@ export const TeamsPage = () => {
 
   const teamInfo = team
     ? {
+        id_team_api:team.idTeam,
         name: team.strTeam,
         stadium: team.strStadium,
         city: team.strLocation,

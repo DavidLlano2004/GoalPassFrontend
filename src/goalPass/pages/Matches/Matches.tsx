@@ -45,6 +45,10 @@ export const Matches = () => {
     clearErrorsCreateMatch();
   };
 
+  const filterMatchesFinally = getMatchesQuery.data?.matches?.filter(
+    (match) => match?.state != "finalizado"
+  );
+
   const teamLocal = useMemo(() => {
     return getTeamsQuery.data?.teams?.find(
       (team: any) => team?.id === dataFormCreateMatch?.id_team_local
@@ -115,13 +119,12 @@ export const Matches = () => {
         </div>
         <div
           className={`flex-1 flex  flex-col ${
-            getMatchesQuery.data?.matches?.length === 0 &&
-            "justify-center items-center"
+            filterMatchesFinally?.length === 0 && "justify-center items-center"
           }`}
         >
-          {(getMatchesQuery.data?.matches ?? [])?.length > 0 ? (
+          {(filterMatchesFinally ?? [])?.length > 0 ? (
             <ContainerMatchesAndFilters
-              dataMatches={getMatchesQuery.data?.matches}
+              dataMatches={filterMatchesFinally}
               control={controlSearchTeams}
             />
           ) : (

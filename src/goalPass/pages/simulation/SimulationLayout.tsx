@@ -4,15 +4,71 @@ import { SimulationInfoMatchPage } from "./SimulationInfoMatchPage";
 import { motion } from "framer-motion";
 import { SimulationResults } from "./SimulationResults";
 import { ComponentEmpty } from "../../../shared/components/molecules/empty/ComponentEmpty";
+import { useQueryMatches } from "../../hooks";
+import { Spinner } from "@heroui/spinner";
+import { useMutationSimulation } from "../../hooks/useMutationSimulation.hooks";
 
 export const SimulationLayout = () => {
+  const { createSimulationMatchMutation } = useMutationSimulation();
+  const { getMatchesQuery } = useQueryMatches();
   const [currentSection, setCurrentSection] = useState(0);
+  const [dataMatch, setDataMatch] = useState(null);
+
+  const filterMatches = getMatchesQuery.data?.matches.filter(
+    (match) => match?.state === "en_venta"
+  );
+
+  const chooseMatch = (match: any) => {
+    setDataMatch(match);
+    setCurrentSection(1);
+  };
+
+  const changeMatch = () => {
+    setDataMatch(null);
+    setCurrentSection(0);
+  };
+
+  const createSimulationFunction = () => {
+    createSimulationMatchMutation.mutate(dataMatch?.id, {
+      onSuccess: () => {
+        setCurrentSection(2);
+      },
+    });
+  };
+
+  console.log(dataMatch);
 
   const SIMULATION_PAGES = {
-    0: <SimulationMatchesPage setCurrentSection={setCurrentSection} />,
-    1: <SimulationInfoMatchPage setCurrentSection={setCurrentSection} />,
-    2: <SimulationResults setCurrentSection={setCurrentSection} />,
+    0: (
+      <SimulationMatchesPage
+        matches={filterMatches ?? []}
+        actionCard={chooseMatch}
+      />
+    ),
+    1: (
+      <SimulationInfoMatchPage
+        dataMatch={dataMatch}
+        setCurrentSection={setCurrentSection}
+        changeMatch={changeMatch}
+        simulateFunction={createSimulationFunction}
+        isLoadingButton={createSimulationMatchMutation.isPending}
+      />
+    ),
+    2: (
+      <SimulationResults
+        matchId={dataMatch?.id}
+        setCurrentSection={setCurrentSection}
+      />
+    ),
   };
+
+  if (getMatchesQuery.isLoading) {
+    return (
+      <div className="flex-1 w-full max-w-[1123px] mx-auto flex justify-center items-center">
+        <Spinner size="lg" color="white" label="Cargando..." />
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -31,7 +87,7 @@ export const SimulationLayout = () => {
             Selecciona un partido y simula el resultado
           </p>
         </div>
-        {[1].length > 0 ? (
+        {(filterMatches?.length ?? 0) > 0 ? (
           Object.entries(SIMULATION_PAGES).map(([dataId, dataComponent]) => {
             const data = currentSection === Number(dataId);
             return data ? <div key={dataId}>{dataComponent}</div> : null;
